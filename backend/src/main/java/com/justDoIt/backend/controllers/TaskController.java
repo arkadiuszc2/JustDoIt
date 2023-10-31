@@ -2,6 +2,7 @@ package com.justDoIt.backend.controllers;
 
 import com.justDoIt.backend.entities.Task;
 import com.justDoIt.backend.services.TaskService;
+import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,11 @@ public class TaskController {
   @GetMapping("/{id}")
   public Task findById(@PathVariable Long id) {
     return taskService.findById(id);
+  }
+
+  @GetMapping(path = "contains/{text}")
+  public Collection<Task> findAllWithGivenSubstringInTitle(@PathVariable String text){
+    return taskService.findAllWithGivenSubstringInTitle(text);
   }
 
   @PutMapping(value = "{id}")
