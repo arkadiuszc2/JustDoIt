@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,5 +28,8 @@ public class Task {
   private Priority priority;
   @Enumerated(EnumType.STRING)
   private Status status;
+  @ManyToOne
+  @JoinColumn(name="category_id")
+  private Category category;
 
 }
