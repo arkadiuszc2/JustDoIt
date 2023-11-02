@@ -2,6 +2,10 @@ package com.justDoIt.backend.controllers;
 
 import com.justDoIt.backend.entities.Task;
 import com.justDoIt.backend.services.TaskService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,26 +24,56 @@ public class TaskController {
 
   private final TaskService taskService;
 
+  @Operation(
+      summary = "Create note",
+      description = "Create new note."
+  )
+
   @PostMapping
   public Task create(@RequestBody Task task) {
     return taskService.create(task);
   }
 
+  @Operation(
+      summary = "Find note by id",
+      description = "Find a note by providing its id."
+  )
+  @ApiResponse(
+      responseCode = "200",
+      content = {
+          @Content(schema = @Schema(implementation = Task.class), mediaType = "application/json")})
+  @ApiResponse(
+      responseCode = "404",
+      content = {
+          @Content(schema = @Schema)}
+  )
   @GetMapping("/{id}")
   public Task findById(@PathVariable Long id) {
     return taskService.findById(id);
   }
 
+  @Operation(
+      summary = "Find note by title content",
+      description = "Find note by specifying words from its title."
+  )
   @GetMapping(path = "contains/{text}")
-  public Collection<Task> findAllWithGivenSubstringInTitle(@PathVariable String text){
+  public Collection<Task> findAllWithGivenSubstringInTitle(@PathVariable String text) {
     return taskService.findAllWithGivenSubstringInTitle(text);
   }
 
+  @Operation(
+      summary = "Update note",
+      description = "Update already existing note."
+  )
   @PutMapping(value = "{id}")
   public Task update(@PathVariable Long id, @RequestBody Task task) {
     return taskService.update(id, task);
   }
 
+  @Operation(
+      summary = "Delete note",
+      description = "Delete existing note."
+  )
   @DeleteMapping("/{id}")
   public void deleteTask(@PathVariable Long id) {
     taskService.deleteById(id);
