@@ -25,8 +25,8 @@ public class TaskController {
   private final TaskService taskService;
 
   @Operation(
-      summary = "Create note",
-      description = "Create new note."
+      summary = "Create task",
+      description = "Create new task."
   )
 
   @PostMapping
@@ -35,8 +35,8 @@ public class TaskController {
   }
 
   @Operation(
-      summary = "Find note by id",
-      description = "Find a note by providing its id."
+      summary = "Find task by id",
+      description = "Find a task by providing its id."
   )
   @ApiResponse(
       responseCode = "200",
@@ -53,8 +53,8 @@ public class TaskController {
   }
 
   @Operation(
-      summary = "Find note by title content",
-      description = "Find note by specifying words from its title."
+      summary = "Find task by title content",
+      description = "Find task by specifying words from its title."
   )
   @GetMapping(path = "contains/{text}")
   public Collection<Task> findAllWithGivenSubstringInTitle(@PathVariable String text) {
@@ -62,8 +62,8 @@ public class TaskController {
   }
 
   @Operation(
-      summary = "Update note",
-      description = "Update already existing note."
+      summary = "Update task",
+      description = "Update already existing task."
   )
   @PutMapping(value = "{id}")
   public Task update(@PathVariable Long id, @RequestBody Task task) {
@@ -71,8 +71,8 @@ public class TaskController {
   }
 
   @Operation(
-      summary = "Delete note",
-      description = "Delete existing note."
+      summary = "Delete task",
+      description = "Delete existing task."
   )
   @DeleteMapping("/{id}")
   public void deleteTask(@PathVariable Long id) {
