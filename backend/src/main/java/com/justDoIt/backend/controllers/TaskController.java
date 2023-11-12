@@ -1,6 +1,8 @@
 package com.justDoIt.backend.controllers;
 
 import com.justDoIt.backend.entities.Task;
+import com.justDoIt.backend.entities.TaskCreateDto;
+import com.justDoIt.backend.entities.TaskViewDto;
 import com.justDoIt.backend.services.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,8 +32,8 @@ public class TaskController {
   )
 
   @PostMapping
-  public Task create(@RequestBody Task task) {
-    return taskService.create(task);
+  public TaskViewDto create(@RequestBody TaskCreateDto taskCreateDto) {
+    return taskService.create(taskCreateDto);
   }
 
   @Operation(
@@ -48,7 +50,7 @@ public class TaskController {
           @Content(schema = @Schema)}
   )
   @GetMapping("/{id}")
-  public Task findById(@PathVariable Long id) {
+  public TaskViewDto findById(@PathVariable Long id) {
     return taskService.findById(id);
   }
 
@@ -57,7 +59,7 @@ public class TaskController {
       description = "Find task by specifying words from its title."
   )
   @GetMapping(path = "contains/{text}")
-  public Collection<Task> findAllWithGivenSubstringInTitle(@PathVariable String text) {
+  public Collection<TaskViewDto> findAllWithGivenSubstringInTitle(@PathVariable String text) {
     return taskService.findAllWithGivenSubstringInTitle(text);
   }
 
@@ -66,8 +68,8 @@ public class TaskController {
       description = "Update already existing task."
   )
   @PutMapping(value = "{id}")
-  public Task update(@PathVariable Long id, @RequestBody Task task) {
-    return taskService.update(id, task);
+  public TaskViewDto update(@PathVariable Long id, @RequestBody TaskViewDto taskViewDto) {
+    return taskService.update(id, taskViewDto);
   }
 
   @Operation(
