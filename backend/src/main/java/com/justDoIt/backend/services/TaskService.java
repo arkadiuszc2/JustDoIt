@@ -44,12 +44,11 @@ public class TaskService {
   }
 
 
-  public TaskViewDto update(Long id, TaskViewDto taskViewDto) {
-    if (!Objects.equals(id, taskViewDto.getId())) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-          "Given id and new task id dont match");
-    }
-    Task task = taskRepository.save(taskViewMapper.toEntity(taskViewDto));
+  public TaskViewDto update(Long id, TaskCreateDto taskCreateDto) {
+    taskRepository.findById(id).orElseThrow();
+    Task task = taskCreateMapper.toEntity(taskCreateDto);
+    task.setId(id);
+    taskRepository.save(task);
     return taskViewMapper.toDto(task);
   }
 

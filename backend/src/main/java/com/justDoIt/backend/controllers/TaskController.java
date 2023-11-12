@@ -68,8 +68,8 @@ public class TaskController {
       description = "Update already existing task."
   )
   @PutMapping(value = "{id}")
-  public TaskViewDto update(@PathVariable Long id, @RequestBody TaskViewDto taskViewDto) {
-    return taskService.update(id, taskViewDto);
+  public TaskViewDto update(@PathVariable Long id, @RequestBody TaskCreateDto taskCreateDto) {
+    return taskService.update(id, taskCreateDto);
   }
 
   @Operation(
