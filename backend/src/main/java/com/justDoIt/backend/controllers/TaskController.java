@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import java.util.Collection;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class TaskController {
   )
 
   @PostMapping
-  public TaskViewDto create(@RequestBody TaskCreateDto taskCreateDto) {
+  public TaskViewDto create(@RequestBody @Valid TaskCreateDto taskCreateDto) {
     return taskService.create(taskCreateDto);
   }
 

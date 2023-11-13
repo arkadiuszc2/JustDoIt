@@ -29,12 +29,14 @@ public class Task {
   private Long id;
   private String title;
   private String description;
+  @NotBlank
   @Enumerated(EnumType.STRING)
   private Priority priority;
+  @NotBlank
   @Enumerated(EnumType.STRING)
   private Status status;
   @ManyToOne
-  @JoinColumn(name="category_id")
+  @JoinColumn(name = "category_id")
   private Category category;
 
 }

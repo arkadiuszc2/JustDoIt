@@ -3,9 +3,12 @@ package com.justDoIt.backend.controllers;
 import com.justDoIt.backend.entities.Category;
 import com.justDoIt.backend.entities.CategoryCreateDto;
 import com.justDoIt.backend.services.CategoryService;
+import jakarta.validation.Valid;
+import jakarta.validation.executable.ValidateOnExecution;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,12 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "categories")
+@ValidateOnExecution
 public class CategoryController {
 
   private final CategoryService categoryService;
 
   @PostMapping
-  public Category create(@RequestBody CategoryCreateDto categoryCreateDto) {
+  public Category create(@RequestBody @Valid CategoryCreateDto categoryCreateDto) {
     return categoryService.create(categoryCreateDto);
   }
 

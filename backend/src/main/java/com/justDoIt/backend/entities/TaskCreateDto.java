@@ -2,6 +2,7 @@ package com.justDoIt.backend.entities;
 
 import com.justDoIt.backend.entities.enums.Priority;
 import com.justDoIt.backend.entities.enums.Status;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class TaskCreateDto {
-
+  @NotBlank(message = "Title is mandatory")
   private String title;
   private String description;
   private Priority priority;
