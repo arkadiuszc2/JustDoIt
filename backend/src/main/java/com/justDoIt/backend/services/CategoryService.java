@@ -7,6 +7,7 @@ import com.justDoIt.backend.mappings.CategoryCreateMapper;
 import com.justDoIt.backend.repositories.CategoryRepository;
 import com.justDoIt.backend.repositories.TaskRepository;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,8 +28,8 @@ public class CategoryService {
   }
 
   public Category getById(Long id) {
-    return categoryRepository.findById(id).orElseThrow(() -> new ResponseStatusException(
-        HttpStatus.NOT_FOUND, "Category with given id does not exist"));
+    return categoryRepository.findById(id)
+        .orElseThrow(() -> new NoSuchElementException("Category with given id does not exist"));
   }
 
   public List<Category> getAll(){
@@ -41,7 +42,8 @@ public class CategoryService {
   }
 
   public Category update(Long id, CategoryCreateDto categoryCreateDto) {
-    Category category =  categoryRepository.findById(id).orElseThrow();
+    Category category =  categoryRepository.findById(id)
+        .orElseThrow(()-> new NoSuchElementException("Category with given id does not exist"));
     category.setDescription(categoryCreateDto.getDescription());
     category.setName(categoryCreateDto.getName());
     return categoryRepository.save(category);

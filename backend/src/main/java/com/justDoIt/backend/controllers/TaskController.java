@@ -12,7 +12,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,8 +38,15 @@ public class TaskController {
   )
 
   @PostMapping
-  public TaskViewDto create(@RequestBody @Valid TaskCreateDto taskCreateDto) {
-    return taskService.create(taskCreateDto);
+  public ResponseEntity<?> create(@RequestBody @Valid TaskCreateDto taskCreateDto) {
+    try {
+      return ResponseEntity.ok(taskService.create(taskCreateDto));
+    } catch (NoSuchElementException e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured: " + e.getMessage());
+    } catch (RuntimeException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+    }
+
   }
 
   @Operation(
@@ -53,8 +63,14 @@ public class TaskController {
           @Content(schema = @Schema)}
   )
   @GetMapping("/{id}")
-  public TaskViewDto findById(@PathVariable Long id) {
-    return taskService.findById(id);
+  public ResponseEntity<?> findById(@PathVariable Long id) {
+    try {
+      return ResponseEntity.ok(taskService.findById(id));
+    } catch (NoSuchElementException e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured: " + e.getMessage());
+    } catch (RuntimeException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+    }
   }
 
   @Operation(
@@ -90,8 +106,16 @@ public class TaskController {
       description = "Update already existing task."
   )
   @PutMapping(value = "{id}")
-  public TaskViewDto update(@PathVariable Long id, @RequestBody TaskCreateDto taskCreateDto) {
-    return taskService.update(id, taskCreateDto);
+  public ResponseEntity<?> update(@PathVariable Long id, @RequestBody TaskCreateDto taskCreateDto) {
+    try {
+      return ResponseEntity.ok(taskService.update(id, taskCreateDto));
+    }catch (IllegalArgumentException e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured" + e.getMessage());
+    } catch (NoSuchElementException e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured: " + e.getMessage());
+    } catch (RuntimeException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+    }
   }
 
   @Operation(

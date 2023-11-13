@@ -35,7 +35,8 @@ public class TaskService {
     boolean categoryExists = categoryRepository.existsById(taskCreateDto.getCategoryId());
     Category category;
     if(categoryExists){
-      category = categoryRepository.findById(taskCreateDto.getCategoryId()).orElseThrow();
+      category = categoryRepository.findById(taskCreateDto.getCategoryId())
+          .orElseThrow(()-> new NoSuchElementException("Category with given id does not exist"));
     } else {
       category = null;
     }
@@ -44,7 +45,7 @@ public class TaskService {
   }
 
   public TaskViewDto findById(Long id) {
-    Task task = taskRepository.findById(id).orElseThrow();
+    Task task = taskRepository.findById(id).orElseThrow(()->new NoSuchElementException("Task with given id does not exist"));
     return taskViewMapper.toDto(task);
   }
 
@@ -75,13 +76,14 @@ public class TaskService {
 
 
   public TaskViewDto update(Long id, TaskCreateDto taskCreateDto) {
-    taskRepository.findById(id).orElseThrow();
+    taskRepository.findById(id).orElseThrow(()->new IllegalArgumentException("Task with given id does not exist"));
     Task task = taskCreateMapper.toEntity(taskCreateDto);
     task.setId(id);
     boolean categoryExists = categoryRepository.existsById(taskCreateDto.getCategoryId());
     Category category;
     if(categoryExists){
-      category = categoryRepository.findById(taskCreateDto.getCategoryId()).orElseThrow();
+      category = categoryRepository.findById(taskCreateDto.getCategoryId())
+          .orElseThrow(()-> new NoSuchElementException("Category with given id does not exist"));
     } else {
       category = null;
     }

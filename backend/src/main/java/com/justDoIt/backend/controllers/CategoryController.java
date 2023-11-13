@@ -6,8 +6,11 @@ import com.justDoIt.backend.services.CategoryService;
 import jakarta.validation.Valid;
 import jakarta.validation.executable.ValidateOnExecution;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,8 +35,15 @@ public class CategoryController {
   }
 
   @GetMapping("/{id}")
-  public Category get(@PathVariable Long id) {
-    return categoryService.getById(id);
+  public ResponseEntity<?> getById(@PathVariable Long id) {
+    try {
+      return ResponseEntity.ok(categoryService.getById(id));
+    } catch (NoSuchElementException e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured: " + e.getMessage());
+    } catch (RuntimeException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+    }
+
   }
 
   @GetMapping
@@ -42,13 +52,20 @@ public class CategoryController {
   }
 
   @GetMapping("/contains/{keyword}")
-  public List<Category> getAllWithNameContainingKeyword(@PathVariable String keyword){
+  public List<Category> getAllWithNameContainingKeyword(@PathVariable String keyword) {
     return categoryService.getAllWithNameContainingKeyword(keyword);
   }
 
   @PutMapping("/{id}")
-  public Category update(@PathVariable Long id, @RequestBody CategoryCreateDto categoryCreateDto) {
-    return categoryService.update(id, categoryCreateDto);
+  public ResponseEntity<?> update(@PathVariable Long id, @RequestBody CategoryCreateDto categoryCreateDto) {
+    try {
+      return ResponseEntity.ok(categoryService.update(id, categoryCreateDto));
+    } catch (NoSuchElementException e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured: " + e.getMessage());
+    } catch (RuntimeException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+    }
+
   }
 
   @DeleteMapping("/{id}")
