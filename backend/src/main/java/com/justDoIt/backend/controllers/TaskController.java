@@ -1,5 +1,6 @@
 package com.justDoIt.backend.controllers;
 
+import com.justDoIt.backend.entities.Category;
 import com.justDoIt.backend.entities.Task;
 import com.justDoIt.backend.entities.TaskCreateDto;
 import com.justDoIt.backend.entities.TaskViewDto;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.Collection;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,6 +64,25 @@ public class TaskController {
   public Collection<TaskViewDto> findAllWithGivenSubstringInTitle(@PathVariable String text) {
     return taskService.findAllWithGivenSubstringInTitle(text);
   }
+  @GetMapping
+  public List<TaskViewDto> getAll(){
+    return taskService.getAll();
+  }
+
+  @GetMapping("/categories/{categoryName}")
+  public List<TaskViewDto> getByCategory(@PathVariable String categoryName){
+    return taskService.getByCategory(categoryName);
+  }
+  @GetMapping("/categories/{categoryName}/sortStatus")
+  public List<TaskViewDto> getByCategorySortByStatus(@PathVariable String categoryName){
+    return taskService.getByCategorySortByStatus(categoryName);
+  }
+  @GetMapping("/categories/{categoryName}/sortPriority")
+  public List<TaskViewDto> getByCategorySortByPriority(@PathVariable String categoryName){
+    return taskService.getByCategorySortByPriority(categoryName);
+  }
+
+
 
   @Operation(
       summary = "Update task",

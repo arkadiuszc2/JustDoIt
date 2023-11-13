@@ -8,8 +8,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface TaskViewMapper {
-  TaskViewMapper INSTANCE = Mappers.getMapper(TaskViewMapper.class);
   @Mapping(source = "category.id", target = "categoryId")
   TaskViewDto toDto(Task task);
-  Task toEntity(TaskViewDto taskViewDto);
+  Task toEntity(TaskViewDto taskViewDto); //is it even used? (probably create mapper is used instead)
 }

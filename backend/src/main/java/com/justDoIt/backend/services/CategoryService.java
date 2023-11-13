@@ -1,7 +1,12 @@
 package com.justDoIt.backend.services;
 
 import com.justDoIt.backend.entities.Category;
+import com.justDoIt.backend.entities.CategoryCreateDto;
+import com.justDoIt.backend.entities.Task;
+import com.justDoIt.backend.mappings.CategoryCreateMapper;
 import com.justDoIt.backend.repositories.CategoryRepository;
+import com.justDoIt.backend.repositories.TaskRepository;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,24 +18,36 @@ import org.springframework.web.server.ResponseStatusException;
 public class CategoryService {
 
   private final CategoryRepository categoryRepository;
+  private final TaskRepository taskRepository;
+  private final CategoryCreateMapper categoryCreateMapper;
 
-  public Category create(Category category) {
+  public Category create(CategoryCreateDto categoryCreateDto) {
+    Category category = categoryCreateMapper.toEntity(categoryCreateDto);
     return categoryRepository.save(category);
   }
 
-  public Category getCategory(Long id) {
+  public Category getById(Long id) {
     return categoryRepository.findById(id).orElseThrow(() -> new ResponseStatusException(
         HttpStatus.NOT_FOUND, "Category with given id does not exist"));
   }
 
-  public Category update(Long id, Category category) {
-    if (!Objects.equals(id, category.getId())) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-          "Given id and new task id dont match");
-    }
+  public List<Category> getAll(){
+    return categoryRepository.findAll();
+  }
+
+  public List<Category> getAllWithNameContainingKeyword(String keyword){
+    return categoryRepository.findAll().stream()
+        .filter(category -> category.getName().toLowerCase().contains(keyword.toLowerCase())).toList();
+  }
+
+  public Category update(Long id, CategoryCreateDto categoryCreateDto) {
+    Category category =  categoryRepository.findById(id).orElseThrow();
+    category.setDescription(categoryCreateDto.getDescription());
+    category.setName(categoryCreateDto.getName());
     return categoryRepository.save(category);
   }
   public void delete(Long id){
+    taskRepository.findAll().stream().filter(task -> task.getCategory().getId().equals(id)).forEach(task -> task.setCategory(null));
     categoryRepository.deleteById(id);
   }
 }

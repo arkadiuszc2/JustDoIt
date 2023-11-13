@@ -1,7 +1,9 @@
 package com.justDoIt.backend.controllers;
 
 import com.justDoIt.backend.entities.Category;
+import com.justDoIt.backend.entities.CategoryCreateDto;
 import com.justDoIt.backend.services.CategoryService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,24 +17,38 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value="categories")
+@RequestMapping(value = "categories")
 public class CategoryController {
+
   private final CategoryService categoryService;
 
   @PostMapping
-  public Category create(@RequestBody Category category){
-    return categoryService.create(category);
+  public Category create(@RequestBody CategoryCreateDto categoryCreateDto) {
+    return categoryService.create(categoryCreateDto);
   }
+
   @GetMapping("/{id}")
-  public Category get(@PathVariable Long id){
-    return categoryService.getCategory(id);
+  public Category get(@PathVariable Long id) {
+    return categoryService.getById(id);
   }
+
+  @GetMapping
+  public List<Category> getAll() {
+    return categoryService.getAll();
+  }
+
+  @GetMapping("/contains/{keyword}")
+  public List<Category> getAllWithNameContainingKeyword(@PathVariable String keyword){
+    return categoryService.getAllWithNameContainingKeyword(keyword);
+  }
+
   @PutMapping("/{id}")
-  public Category update(@PathVariable Long id, @RequestBody Category category){
-    return categoryService.update(id,category);
+  public Category update(@PathVariable Long id, @RequestBody CategoryCreateDto categoryCreateDto) {
+    return categoryService.update(id, categoryCreateDto);
   }
+
   @DeleteMapping("/{id}")
-  public void delete(@PathVariable Long id){
+  public void delete(@PathVariable Long id) {
     categoryService.delete(id);
   }
 }

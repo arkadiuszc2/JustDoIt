@@ -4,11 +4,15 @@ import com.justDoIt.backend.entities.Category;
 import com.justDoIt.backend.entities.Task;
 import com.justDoIt.backend.entities.TaskCreateDto;
 import com.justDoIt.backend.entities.TaskViewDto;
+import com.justDoIt.backend.entities.comparators.TaskPriorityComparator;
+import com.justDoIt.backend.entities.comparators.TaskStatusComparator;
 import com.justDoIt.backend.mappings.TaskCreateMapper;
 import com.justDoIt.backend.mappings.TaskViewMapper;
 import com.justDoIt.backend.repositories.CategoryRepository;
 import com.justDoIt.backend.repositories.TaskRepository;
 import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,10 +27,18 @@ public class TaskService {
   private final CategoryRepository categoryRepository;
   private final TaskViewMapper taskViewMapper;
   private final TaskCreateMapper taskCreateMapper;
+  private final TaskStatusComparator taskStatusComparator = new TaskStatusComparator();
+  private final TaskPriorityComparator taskPriorityComparator = new TaskPriorityComparator();
 
-  public TaskViewDto create(TaskCreateDto taskCreateDto) {
+  public TaskViewDto create(TaskCreateDto taskCreateDto) { //change to pick category by name not id
     Task task = taskCreateMapper.toEntity(taskCreateDto);
-    Category category = categoryRepository.findById(taskCreateDto.getCategoryId()).orElseThrow();
+    boolean categoryExists = categoryRepository.existsById(taskCreateDto.getCategoryId());
+    Category category;
+    if(categoryExists){
+      category = categoryRepository.findById(taskCreateDto.getCategoryId()).orElseThrow();
+    } else {
+      category = null;
+    }
     task.setCategory(category);
     return taskViewMapper.toDto(taskRepository.save(task));
   }
@@ -43,11 +55,37 @@ public class TaskService {
         .toList();
   }
 
+  public List<TaskViewDto> getAll() {
+    return taskRepository.findAll().stream().map(taskViewMapper::toDto).toList();
+  }
+
+  public List<TaskViewDto> getByCategory(String categoryName) {
+    return getTaskEntityByCategoryName(categoryName).stream().map(taskViewMapper::toDto).toList();
+  }
+
+  public List<TaskViewDto> getByCategorySortByStatus(String categoryName) {
+    return getTaskEntityByCategoryName(categoryName).stream().sorted(taskStatusComparator)
+        .map(taskViewMapper::toDto).toList();
+  }
+
+  public List<TaskViewDto> getByCategorySortByPriority(String categoryName) {
+    return getTaskEntityByCategoryName(categoryName).stream().sorted(taskPriorityComparator)
+        .map(taskViewMapper::toDto).toList();
+  }
+
 
   public TaskViewDto update(Long id, TaskCreateDto taskCreateDto) {
     taskRepository.findById(id).orElseThrow();
     Task task = taskCreateMapper.toEntity(taskCreateDto);
     task.setId(id);
+    boolean categoryExists = categoryRepository.existsById(taskCreateDto.getCategoryId());
+    Category category;
+    if(categoryExists){
+      category = categoryRepository.findById(taskCreateDto.getCategoryId()).orElseThrow();
+    } else {
+      category = null;
+    }
+    task.setCategory(category);
     taskRepository.save(task);
     return taskViewMapper.toDto(task);
   }
@@ -56,4 +94,9 @@ public class TaskService {
     taskRepository.deleteById(id);
   }
 
+
+  private List<Task> getTaskEntityByCategoryName(String categoryName) {
+    return taskRepository.findAll().stream().filter(task -> task.getCategory().getName()
+        .equals(categoryName)).toList();
+  }
 }

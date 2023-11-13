@@ -1,7 +1,7 @@
 package com.justDoIt.backend.entities.enums;
 
 public enum Priority {
-  LOW,
+  HIGH,
   MEDIUM,
-  HIGH
+  LOW,
 }
