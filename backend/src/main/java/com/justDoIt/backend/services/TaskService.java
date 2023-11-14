@@ -10,7 +10,10 @@ import com.justDoIt.backend.mappings.TaskCreateMapper;
 import com.justDoIt.backend.mappings.TaskViewMapper;
 import com.justDoIt.backend.repositories.CategoryRepository;
 import com.justDoIt.backend.repositories.TaskRepository;
+import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -38,7 +41,7 @@ public class TaskService {
       category = categoryRepository.findById(taskCreateDto.getCategoryId())
           .orElseThrow(() -> new NoSuchElementException("Category with given id does not exist"));
     } else {
-      category = null;
+      throw new NoSuchElementException("Category with given id does not exist");
     }
     task.setCategory(category);
     return taskViewMapper.toDto(taskRepository.save(task));
@@ -66,12 +69,14 @@ public class TaskService {
   }
 
   public List<TaskViewDto> getByCategorySortByStatus(String categoryName) {
-    return getTaskEntityByCategoryName(categoryName).stream().sorted(taskStatusComparator)
-        .map(taskViewMapper::toDto).toList();
+    return getTaskEntityByCategoryName(categoryName).stream()
+        .sorted(Comparator.comparing(Task::getStatus))
+        .map(taskViewMapper::toDto)
+        .toList();
   }
 
   public List<TaskViewDto> getByCategorySortByPriority(String categoryName) {
-    return getTaskEntityByCategoryName(categoryName).stream().sorted(taskPriorityComparator)
+    return getTaskEntityByCategoryName(categoryName).stream().sorted(Comparator.comparing(Task::getPriority))
         .map(taskViewMapper::toDto).toList();
   }
 
@@ -100,7 +105,15 @@ public class TaskService {
 
 
   private List<Task> getTaskEntityByCategoryName(String categoryName) {
-    return taskRepository.findAll().stream().filter(task -> task.getCategory().getName()
-        .equals(categoryName)).toList();
+    List<Task> taskList = taskRepository.findAll().stream().toList();
+    List<Task> filteredList = new ArrayList<Task>();
+    for (Task task : taskList) {
+      if (task.getCategory() != null) {
+        if (task.getCategory().getName().equals(categoryName)) {
+          filteredList.add(task);
+        }
+      }
+    }
+    return filteredList;
   }
 }
