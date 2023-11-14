@@ -8,6 +8,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface TaskCreateMapper {
+
   @Mapping(target = "category", ignore = true)
   Task toEntity(TaskCreateDto taskCreateDto);
 

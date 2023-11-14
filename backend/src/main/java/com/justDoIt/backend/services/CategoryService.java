@@ -32,24 +32,27 @@ public class CategoryService {
         .orElseThrow(() -> new NoSuchElementException("Category with given id does not exist"));
   }
 
-  public List<Category> getAll(){
+  public List<Category> getAll() {
     return categoryRepository.findAll();
   }
 
-  public List<Category> getAllWithNameContainingKeyword(String keyword){
+  public List<Category> getAllWithNameContainingKeyword(String keyword) {
     return categoryRepository.findAll().stream()
-        .filter(category -> category.getName().toLowerCase().contains(keyword.toLowerCase())).toList();
+        .filter(category -> category.getName().toLowerCase().contains(keyword.toLowerCase()))
+        .toList();
   }
 
   public Category update(Long id, CategoryCreateDto categoryCreateDto) {
-    Category category =  categoryRepository.findById(id)
-        .orElseThrow(()-> new NoSuchElementException("Category with given id does not exist"));
+    Category category = categoryRepository.findById(id)
+        .orElseThrow(() -> new NoSuchElementException("Category with given id does not exist"));
     category.setDescription(categoryCreateDto.getDescription());
     category.setName(categoryCreateDto.getName());
     return categoryRepository.save(category);
   }
-  public void delete(Long id){
-    taskRepository.findAll().stream().filter(task -> task.getCategory().getId().equals(id)).forEach(task -> task.setCategory(null));
+
+  public void delete(Long id) {
+    taskRepository.findAll().stream().filter(task -> task.getCategory().getId().equals(id))
+        .forEach(task -> task.setCategory(null));
     categoryRepository.deleteById(id);
   }
 }

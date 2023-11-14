@@ -39,7 +39,8 @@ public class CategoryController {
     try {
       return ResponseEntity.ok(categoryService.getById(id));
     } catch (NoSuchElementException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body("An error occured: " + e.getMessage());
     } catch (RuntimeException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
     }
@@ -57,11 +58,13 @@ public class CategoryController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<?> update(@PathVariable Long id, @RequestBody CategoryCreateDto categoryCreateDto) {
+  public ResponseEntity<?> update(@PathVariable Long id,
+      @RequestBody CategoryCreateDto categoryCreateDto) {
     try {
       return ResponseEntity.ok(categoryService.update(id, categoryCreateDto));
     } catch (NoSuchElementException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body("An error occured: " + e.getMessage());
     } catch (RuntimeException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
     }

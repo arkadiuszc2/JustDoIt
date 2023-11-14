@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class TaskCreateDto {
+
   @NotBlank(message = "Title is mandatory")
   private String title;
   private String description;

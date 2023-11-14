@@ -42,7 +42,8 @@ public class TaskController {
     try {
       return ResponseEntity.ok(taskService.create(taskCreateDto));
     } catch (NoSuchElementException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body("An error occured: " + e.getMessage());
     } catch (RuntimeException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
     }
@@ -67,7 +68,8 @@ public class TaskController {
     try {
       return ResponseEntity.ok(taskService.findById(id));
     } catch (NoSuchElementException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body("An error occured: " + e.getMessage());
     } catch (RuntimeException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
     }
@@ -81,24 +83,26 @@ public class TaskController {
   public Collection<TaskViewDto> findAllWithGivenSubstringInTitle(@PathVariable String text) {
     return taskService.findAllWithGivenSubstringInTitle(text);
   }
+
   @GetMapping
-  public List<TaskViewDto> getAll(){
+  public List<TaskViewDto> getAll() {
     return taskService.getAll();
   }
 
   @GetMapping("/categories/{categoryName}")
-  public List<TaskViewDto> getByCategory(@PathVariable String categoryName){
+  public List<TaskViewDto> getByCategory(@PathVariable String categoryName) {
     return taskService.getByCategory(categoryName);
   }
+
   @GetMapping("/categories/{categoryName}/sortStatus")
-  public List<TaskViewDto> getByCategorySortByStatus(@PathVariable String categoryName){
+  public List<TaskViewDto> getByCategorySortByStatus(@PathVariable String categoryName) {
     return taskService.getByCategorySortByStatus(categoryName);
   }
+
   @GetMapping("/categories/{categoryName}/sortPriority")
-  public List<TaskViewDto> getByCategorySortByPriority(@PathVariable String categoryName){
+  public List<TaskViewDto> getByCategorySortByPriority(@PathVariable String categoryName) {
     return taskService.getByCategorySortByPriority(categoryName);
   }
-
 
 
   @Operation(
@@ -109,10 +113,12 @@ public class TaskController {
   public ResponseEntity<?> update(@PathVariable Long id, @RequestBody TaskCreateDto taskCreateDto) {
     try {
       return ResponseEntity.ok(taskService.update(id, taskCreateDto));
-    }catch (IllegalArgumentException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured" + e.getMessage());
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body("An error occured" + e.getMessage());
     } catch (NoSuchElementException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occured: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body("An error occured: " + e.getMessage());
     } catch (RuntimeException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
     }
