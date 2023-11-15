@@ -32,21 +32,13 @@ public class CategoryController {
   private final CategoryService categoryService;
 
   @PostMapping
-  public Category create(@RequestBody @Valid CategoryCreateDto categoryCreateDto) {
+  public Category create(@RequestBody @Valid CategoryCreateDto categoryCreateDto) throws ServiceLayerException{
     return categoryService.create(categoryCreateDto);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<?> getById(@PathVariable Long id) throws ServiceLayerException {
-    try {
+  public ResponseEntity<Category> getById(@PathVariable Long id) throws ServiceLayerException {
       return ResponseEntity.ok(categoryService.getById(id));
-    } catch (NoSuchElementException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body("An error occured: " + e.getMessage());
-    } catch (RuntimeException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
-    }
-
   }
 
   @GetMapping
@@ -60,17 +52,9 @@ public class CategoryController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<?> update(@PathVariable Long id,
+  public ResponseEntity<Category> update(@PathVariable Long id,
       @RequestBody CategoryCreateDto categoryCreateDto) throws ServiceLayerException {
-    try {
       return ResponseEntity.ok(categoryService.update(id, categoryCreateDto));
-    } catch (NoSuchElementException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body("An error occured: " + e.getMessage());
-    } catch (RuntimeException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
-    }
-
   }
 
   @DeleteMapping("/{id}")

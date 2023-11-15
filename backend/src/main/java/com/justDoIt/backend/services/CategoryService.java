@@ -3,6 +3,7 @@ package com.justDoIt.backend.services;
 import com.justDoIt.backend.entities.Category;
 import com.justDoIt.backend.entities.CategoryCreateDto;
 import com.justDoIt.backend.entities.Task;
+import com.justDoIt.backend.exceptions.CategoryNameNotUniqueException;
 import com.justDoIt.backend.exceptions.CategoryNotFoundException;
 import com.justDoIt.backend.exceptions.ServiceLayerException;
 import com.justDoIt.backend.mappings.CategoryCreateMapper;
@@ -24,8 +25,11 @@ public class CategoryService {
   private final TaskRepository taskRepository;
   private final CategoryCreateMapper categoryCreateMapper;
 
-  public Category create(CategoryCreateDto categoryCreateDto) {
+  public Category create(CategoryCreateDto categoryCreateDto) throws ServiceLayerException{
     Category category = categoryCreateMapper.toEntity(categoryCreateDto);
+    if(categoryRepository.existsByName(category.getName())){
+      throw new CategoryNameNotUniqueException("Category name must be unique");
+    }
     return categoryRepository.save(category);
   }
 

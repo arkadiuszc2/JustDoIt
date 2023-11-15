@@ -99,18 +99,8 @@ public class TaskController {
       description = "Update already existing task."
   )
   @PutMapping(value = "{id}")
-  public ResponseEntity<?> update(@PathVariable Long id, @RequestBody TaskCreateDto taskCreateDto) throws ServiceLayerException {
-    try {
+  public ResponseEntity<TaskViewDto> update(@PathVariable Long id, @RequestBody TaskCreateDto taskCreateDto) throws ServiceLayerException {
       return ResponseEntity.ok(taskService.update(id, taskCreateDto));
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body("An error occured" + e.getMessage());
-    } catch (NoSuchElementException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body("An error occured: " + e.getMessage());
-    } catch (RuntimeException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
-    }
   }
 
   @Operation(

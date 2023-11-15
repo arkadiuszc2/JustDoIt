@@ -17,7 +17,14 @@ public class ApplicationExceptionHandler {
 
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ExceptionHandler({ServiceLayerException.class})
-  public Map<String, String> handleServiceExceptions(ServiceLayerException ex) {
+  public Map<String, String> handleNotFoundExceptions(ServiceLayerException ex) {
+    Map<String, String> errorMap = new HashMap<>();
+    errorMap.put("An error occured: ", ex.getMessage());
+    return errorMap;
+  }
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler({ServiceLayerException.class})
+  public Map<String, String> handleNotUniqueNameExceptions(ServiceLayerException ex) {
     Map<String, String> errorMap = new HashMap<>();
     errorMap.put("An error occured: ", ex.getMessage());
     return errorMap;
