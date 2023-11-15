@@ -4,16 +4,20 @@ import com.justDoIt.backend.entities.Category;
 import com.justDoIt.backend.entities.Task;
 import com.justDoIt.backend.entities.TaskCreateDto;
 import com.justDoIt.backend.entities.TaskViewDto;
+import com.justDoIt.backend.exceptions.CategoryNotFoundException;
+import com.justDoIt.backend.exceptions.ServiceLayerException;
 import com.justDoIt.backend.services.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import java.security.Provider.Service;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.cache.CacheException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +42,7 @@ public class TaskController {
   )
 
   @PostMapping
-  public ResponseEntity<?> create(@RequestBody @Valid TaskCreateDto taskCreateDto) {
+  public ResponseEntity<?> create(@RequestBody @Valid TaskCreateDto taskCreateDto) throws ServiceLayerException {
     try {
       return ResponseEntity.ok(taskService.create(taskCreateDto));
     } catch (NoSuchElementException e) {
@@ -64,15 +68,8 @@ public class TaskController {
           @Content(schema = @Schema)}
   )
   @GetMapping("/{id}")
-  public ResponseEntity<?> findById(@PathVariable Long id) {
-    try {
-      return ResponseEntity.ok(taskService.findById(id));
-    } catch (NoSuchElementException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body("An error occured: " + e.getMessage());
-    } catch (RuntimeException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
-    }
+  public ResponseEntity<TaskViewDto> findById(@PathVariable Long id) throws ServiceLayerException{
+      return ResponseEntity.status(HttpStatus.OK).body(taskService.findById(id));
   }
 
   @Operation(
@@ -110,7 +107,7 @@ public class TaskController {
       description = "Update already existing task."
   )
   @PutMapping(value = "{id}")
-  public ResponseEntity<?> update(@PathVariable Long id, @RequestBody TaskCreateDto taskCreateDto) {
+  public ResponseEntity<?> update(@PathVariable Long id, @RequestBody TaskCreateDto taskCreateDto) throws ServiceLayerException {
     try {
       return ResponseEntity.ok(taskService.update(id, taskCreateDto));
     } catch (IllegalArgumentException e) {

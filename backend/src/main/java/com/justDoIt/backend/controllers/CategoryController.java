@@ -2,6 +2,8 @@ package com.justDoIt.backend.controllers;
 
 import com.justDoIt.backend.entities.Category;
 import com.justDoIt.backend.entities.CategoryCreateDto;
+import com.justDoIt.backend.exceptions.CategoryNotFoundException;
+import com.justDoIt.backend.exceptions.ServiceLayerException;
 import com.justDoIt.backend.services.CategoryService;
 import jakarta.validation.Valid;
 import jakarta.validation.executable.ValidateOnExecution;
@@ -35,7 +37,7 @@ public class CategoryController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<?> getById(@PathVariable Long id) {
+  public ResponseEntity<?> getById(@PathVariable Long id) throws ServiceLayerException {
     try {
       return ResponseEntity.ok(categoryService.getById(id));
     } catch (NoSuchElementException e) {
@@ -59,7 +61,7 @@ public class CategoryController {
 
   @PutMapping("/{id}")
   public ResponseEntity<?> update(@PathVariable Long id,
-      @RequestBody CategoryCreateDto categoryCreateDto) {
+      @RequestBody CategoryCreateDto categoryCreateDto) throws ServiceLayerException {
     try {
       return ResponseEntity.ok(categoryService.update(id, categoryCreateDto));
     } catch (NoSuchElementException e) {

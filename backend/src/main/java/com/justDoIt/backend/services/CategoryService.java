@@ -3,6 +3,8 @@ package com.justDoIt.backend.services;
 import com.justDoIt.backend.entities.Category;
 import com.justDoIt.backend.entities.CategoryCreateDto;
 import com.justDoIt.backend.entities.Task;
+import com.justDoIt.backend.exceptions.CategoryNotFoundException;
+import com.justDoIt.backend.exceptions.ServiceLayerException;
 import com.justDoIt.backend.mappings.CategoryCreateMapper;
 import com.justDoIt.backend.repositories.CategoryRepository;
 import com.justDoIt.backend.repositories.TaskRepository;
@@ -27,9 +29,9 @@ public class CategoryService {
     return categoryRepository.save(category);
   }
 
-  public Category getById(Long id) {
+  public Category getById(Long id) throws ServiceLayerException {
     return categoryRepository.findById(id)
-        .orElseThrow(() -> new NoSuchElementException("Category with given id does not exist"));
+        .orElseThrow(() -> new CategoryNotFoundException("Category with given id does not exist"));
   }
 
   public List<Category> getAll() {
@@ -42,9 +44,9 @@ public class CategoryService {
         .toList();
   }
 
-  public Category update(Long id, CategoryCreateDto categoryCreateDto) {
+  public Category update(Long id, CategoryCreateDto categoryCreateDto) throws ServiceLayerException {
     Category category = categoryRepository.findById(id)
-        .orElseThrow(() -> new NoSuchElementException("Category with given id does not exist"));
+        .orElseThrow(() -> new CategoryNotFoundException("Category with given id does not exist"));
     category.setDescription(categoryCreateDto.getDescription());
     category.setName(categoryCreateDto.getName());
     return categoryRepository.save(category);
