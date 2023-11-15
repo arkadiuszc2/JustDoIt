@@ -66,8 +66,7 @@ public class CategoryService {
   }
 
   public void delete(Long id) {
-    taskRepository.findAll().stream().filter(task -> task.getCategory().getId().equals(id))
-        .forEach(task -> task.setCategory(null));
+    taskRepository.findAllByCategory_Id(id).forEach(task -> task.setCategory(null));
     categoryRepository.deleteById(id);
   }
 }
