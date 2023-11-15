@@ -28,7 +28,6 @@ public class TaskCreateDto {
   @NotNull(message = "must not be null")
   @Pattern(regexp = "(?i)^(todo|done)$", message = "must be TODO or DONE")
   private String status;
-  @NotNull(message = "must not be null")
   @Min(value = 0L, message = "must be greater than or equal to 0")
   private Long categoryId;
 

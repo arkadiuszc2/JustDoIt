@@ -4,8 +4,6 @@ import com.justDoIt.backend.entities.Category;
 import com.justDoIt.backend.entities.Task;
 import com.justDoIt.backend.entities.TaskCreateDto;
 import com.justDoIt.backend.entities.TaskViewDto;
-import com.justDoIt.backend.comparators.TaskPriorityComparator;
-import com.justDoIt.backend.comparators.TaskStatusComparator;
 import com.justDoIt.backend.exceptions.CategoryNotFoundException;
 import com.justDoIt.backend.exceptions.ServiceLayerException;
 import com.justDoIt.backend.exceptions.TaskNotFoundException;
@@ -29,20 +27,24 @@ public class TaskService {
   private final CategoryRepository categoryRepository;
   private final TaskViewMapper taskViewMapper;
   private final TaskCreateMapper taskCreateMapper;
-  private final TaskStatusComparator taskStatusComparator = new TaskStatusComparator();
-  private final TaskPriorityComparator taskPriorityComparator = new TaskPriorityComparator();
 
   public TaskViewDto create(TaskCreateDto taskCreateDto) throws ServiceLayerException { //change to pick category by name not id
     Task task = taskCreateMapper.toEntity(taskCreateDto);
-    Category category = categoryRepository.findById(taskCreateDto.getCategoryId())
-        .orElseThrow(() -> new CategoryNotFoundException("Category with given id does not exist"));
-    task.setCategory(category);
+    Long categoryId = taskCreateDto.getCategoryId();
+    if (categoryId != null) {
+      Category category = categoryRepository.findById(categoryId)
+          .orElseThrow(
+              () -> new CategoryNotFoundException("Category with given id does not exist"));
+      task.setCategory(category);
+    } else {
+      task.setCategory(null);
+    }
     return taskViewMapper.toDto(taskRepository.save(task));
   }
 
-  public TaskViewDto findById(Long id) throws ServiceLayerException{
+  public TaskViewDto findById(Long id) throws ServiceLayerException {
     Task task = taskRepository.findById(id)
-        .orElseThrow(()->new TaskNotFoundException("Task with given id does not exist"));
+        .orElseThrow(() -> new TaskNotFoundException("Task with given id does not exist"));
     return taskViewMapper.toDto(task);
   }
 
@@ -80,14 +82,8 @@ public class TaskService {
         .orElseThrow(() -> new TaskNotFoundException("Task with given id does not exist"));
     Task task = taskCreateMapper.toEntity(taskCreateDto);
     task.setId(id);
-    boolean categoryExists = categoryRepository.existsById(taskCreateDto.getCategoryId());
-    Category category;
-    if (categoryExists) {
-      category = categoryRepository.findById(taskCreateDto.getCategoryId())
-          .orElseThrow(() -> new CategoryNotFoundException("Category with given id does not exist"));
-    } else {
-      category = null;
-    }
+    Category category = categoryRepository.findById(taskCreateDto.getCategoryId())
+        .orElseThrow(() -> new CategoryNotFoundException("Category with given id does not exist"));
     task.setCategory(category);
     taskRepository.save(task);
     return taskViewMapper.toDto(task);
