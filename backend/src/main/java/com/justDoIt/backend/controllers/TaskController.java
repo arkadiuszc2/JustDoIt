@@ -42,16 +42,8 @@ public class TaskController {
   )
 
   @PostMapping
-  public ResponseEntity<?> create(@RequestBody @Valid TaskCreateDto taskCreateDto) throws ServiceLayerException {
-    try {
-      return ResponseEntity.ok(taskService.create(taskCreateDto));
-    } catch (NoSuchElementException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body("An error occured: " + e.getMessage());
-    } catch (RuntimeException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
-    }
-
+  public ResponseEntity<TaskViewDto> create(@RequestBody @Valid TaskCreateDto taskCreateDto) throws ServiceLayerException {
+      return ResponseEntity.status(HttpStatus.CREATED).body(taskService.create(taskCreateDto));
   }
 
   @Operation(

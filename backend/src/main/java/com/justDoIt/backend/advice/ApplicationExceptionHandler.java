@@ -6,6 +6,7 @@ import com.justDoIt.backend.exceptions.TaskNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -16,9 +17,18 @@ public class ApplicationExceptionHandler {
 
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ExceptionHandler({ServiceLayerException.class})
-  public Map<String,String> handleServiceExceptions(ServiceLayerException ex){
-    Map<String,String> errorMap = new HashMap<>();
+  public Map<String, String> handleServiceExceptions(ServiceLayerException ex) {
+    Map<String, String> errorMap = new HashMap<>();
     errorMap.put("An error occured: ", ex.getMessage());
+    return errorMap;
+  }
+
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public Map<String, String> handleValidationException(MethodArgumentNotValidException ex) {
+    Map<String, String> errorMap = new HashMap<>();
+    ex.getBindingResult().getFieldErrors()
+        .forEach(fieldError -> errorMap.put(fieldError.getField(), fieldError.getDefaultMessage()));
     return errorMap;
   }
 }
