@@ -6,10 +6,12 @@ import com.justDoIt.backend.exceptions.CategoryNotFoundException;
 import com.justDoIt.backend.exceptions.ServiceLayerException;
 import com.justDoIt.backend.services.CategoryService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.executable.ValidateOnExecution;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -32,13 +35,17 @@ public class CategoryController {
   private final CategoryService categoryService;
 
   @PostMapping
-  public Category create(@RequestBody @Valid CategoryCreateDto categoryCreateDto) throws ServiceLayerException{
+  public Category create(@RequestBody @Valid CategoryCreateDto categoryCreateDto)
+      throws ServiceLayerException {
     return categoryService.create(categoryCreateDto);
   }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<Category> getById(@PathVariable Long id) throws ServiceLayerException {
-      return ResponseEntity.ok(categoryService.getById(id));
+  @GetMapping("/{identifier}")
+  public ResponseEntity<List<Category>> getByIdOrContainingNameInTitle(
+      @RequestParam("searchBy") @Pattern(regexp = "id|name", message = "must be 'id' or 'name'") String searchBy,
+      @RequestParam("identifier") String identifier) throws ServiceLayerException {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(categoryService.getByIdOrContainingWordInTitle(searchBy, identifier));
   }
 
   @GetMapping
@@ -46,15 +53,10 @@ public class CategoryController {
     return categoryService.getAll();
   }
 
-  @GetMapping("/contains/{keyword}")
-  public List<Category> getAllWithNameContainingKeyword(@PathVariable String keyword) {
-    return categoryService.getAllWithNameContainingKeyword(keyword);
-  }
-
   @PutMapping("/{id}")
   public ResponseEntity<Category> update(@PathVariable Long id,
       @RequestBody CategoryCreateDto categoryCreateDto) throws ServiceLayerException {
-      return ResponseEntity.ok(categoryService.update(id, categoryCreateDto));
+    return ResponseEntity.ok(categoryService.update(id, categoryCreateDto));
   }
 
   @DeleteMapping("/{id}")

@@ -6,9 +6,11 @@ import com.justDoIt.backend.entities.Task;
 import com.justDoIt.backend.exceptions.CategoryNameNotUniqueException;
 import com.justDoIt.backend.exceptions.CategoryNotFoundException;
 import com.justDoIt.backend.exceptions.ServiceLayerException;
+import com.justDoIt.backend.exceptions.WrongSearchModeException;
 import com.justDoIt.backend.mappings.CategoryCreateMapper;
 import com.justDoIt.backend.repositories.CategoryRepository;
 import com.justDoIt.backend.repositories.TaskRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -33,19 +35,26 @@ public class CategoryService {
     return categoryRepository.save(category);
   }
 
-  public Category getById(Long id) throws ServiceLayerException {
-    return categoryRepository.findById(id)
-        .orElseThrow(() -> new CategoryNotFoundException("Category with given id does not exist"));
+  public List<Category> getByIdOrContainingWordInTitle(String searchBy, String identifier) throws ServiceLayerException {
+    List<Category> category = new ArrayList<>();
+    if (searchBy.equals("id")) {
+      Long id = Long.parseLong(identifier);
+      category.add(categoryRepository.findById(id).orElseThrow(()-> new CategoryNotFoundException("Category with given id does not exist")));
+    } else if(searchBy.equals("name")){
+      category = categoryRepository.getCategoriesByNameIsContaining(identifier).stream().toList();
+    } else {
+      throw new WrongSearchModeException("Provided category search mode does not exist");
+    }
+
+    if(category.isEmpty()){
+      throw new CategoryNotFoundException("Category with given name does not exist");
+    }
+
+    return category;
   }
 
   public List<Category> getAll() {
     return categoryRepository.findAll();
-  }
-
-  public List<Category> getAllWithNameContainingKeyword(String keyword) {
-    return categoryRepository.findAll().stream()
-        .filter(category -> category.getName().toLowerCase().contains(keyword.toLowerCase()))
-        .toList();
   }
 
   public Category update(Long id, CategoryCreateDto categoryCreateDto) throws ServiceLayerException {

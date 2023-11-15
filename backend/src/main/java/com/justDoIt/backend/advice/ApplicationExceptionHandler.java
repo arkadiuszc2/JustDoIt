@@ -1,5 +1,6 @@
 package com.justDoIt.backend.advice;
 
+import com.justDoIt.backend.exceptions.CategoryNameNotUniqueException;
 import com.justDoIt.backend.exceptions.CategoryNotFoundException;
 import com.justDoIt.backend.exceptions.ServiceLayerException;
 import com.justDoIt.backend.exceptions.TaskNotFoundException;
@@ -23,7 +24,7 @@ public class ApplicationExceptionHandler {
     return errorMap;
   }
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ExceptionHandler({ServiceLayerException.class})
+  @ExceptionHandler({CategoryNameNotUniqueException.class})
   public Map<String, String> handleNotUniqueNameExceptions(ServiceLayerException ex) {
     Map<String, String> errorMap = new HashMap<>();
     errorMap.put("An error occured: ", ex.getMessage());
