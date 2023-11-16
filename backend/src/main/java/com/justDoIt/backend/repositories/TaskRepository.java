@@ -13,7 +13,4 @@ import org.springframework.web.bind.annotation.RestController;
 public interface TaskRepository extends JpaRepository<Task, Long> {
   Collection<Task> findAllByCategory_Id(Long categoryId);
   Collection<Task> getTasksByTitleIsContaining(String word);
-
-  List<Task> getTasksByCategory_IdOrderByPriority(Long categoryId);
-  List<Task> getTasksByCategory_IdOrderByStatus(Long categoryId);
 }

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import java.security.Provider.Service;
 import java.util.Collection;
@@ -72,8 +73,8 @@ public class TaskController {
         .body(taskService.getByIdOrContainingTextInTitle(searchBy, identifier));
   }
 
-  @GetMapping("/sort-and-filter/{categoryName}")
-  public ResponseEntity<List<TaskViewDto>> getByCategoryAndSort(@PathVariable String categoryName,
+  @GetMapping("/sort-and-filter")
+  public ResponseEntity<List<TaskViewDto>> getByCategoryAndSort(@RequestParam(required = false) String categoryName,
       @RequestParam("sortBy") @Pattern(regexp = "priority|status|disabled", message = "must be 'priority', 'status' or 'disabled'") String sortBy)
       throws ServiceLayerException {
     return ResponseEntity.ok(taskService.getByCategoryAndSort(categoryName, sortBy));
