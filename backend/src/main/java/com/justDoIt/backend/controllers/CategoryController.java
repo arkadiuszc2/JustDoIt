@@ -41,11 +41,12 @@ public class CategoryController {
   }
 
   @GetMapping("/{identifier}")
-  public ResponseEntity<List<Category>> getByIdOrContainingNameInTitle(
+  public ResponseEntity<List<Category>> getByIdOrContainingTextInName(
       @RequestParam("searchBy") @Pattern(regexp = "id|name", message = "must be 'id' or 'name'") String searchBy,
-      @RequestParam("identifier") String identifier) throws ServiceLayerException {
+      @PathVariable("identifier") @Pattern(regexp = "^[1-9][0-9]*$") String identifier)
+      throws ServiceLayerException {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(categoryService.getByIdOrContainingWordInTitle(searchBy, identifier));
+        .body(categoryService.getByIdOrContainingTextInName(searchBy, identifier));
   }
 
   @GetMapping

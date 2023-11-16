@@ -12,11 +12,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import java.security.Provider.Service;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.hibernate.cache.CacheException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -42,8 +45,9 @@ public class TaskController {
   )
 
   @PostMapping
-  public ResponseEntity<TaskViewDto> create(@RequestBody @Valid TaskCreateDto taskCreateDto) throws ServiceLayerException {
-      return ResponseEntity.status(HttpStatus.CREATED).body(taskService.create(taskCreateDto));
+  public ResponseEntity<TaskViewDto> create(@RequestBody @Valid TaskCreateDto taskCreateDto)
+      throws ServiceLayerException {
+    return ResponseEntity.status(HttpStatus.CREATED).body(taskService.create(taskCreateDto));
   }
 
   @Operation(
@@ -59,18 +63,20 @@ public class TaskController {
       content = {
           @Content(schema = @Schema)}
   )
-  @GetMapping("/{id}")
-  public ResponseEntity<TaskViewDto> findById(@PathVariable Long id) throws ServiceLayerException{
-      return ResponseEntity.status(HttpStatus.OK).body(taskService.findById(id));
+  @GetMapping("/{identifier}")
+  public ResponseEntity<List<TaskViewDto>> getByIdOrContainingNameInTitle(
+      @RequestParam("searchBy") @Pattern(regexp = "id|name", message = "must be 'id' or 'name'") String searchBy,
+      @PathVariable("identifier") @Pattern(regexp = "^[1-9][0-9]*$") String identifier)
+      throws ServiceLayerException {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(taskService.getByIdOrContainingTextInTitle(searchBy, identifier));
   }
 
-  @Operation(
-      summary = "Find task by title content",
-      description = "Find task by specifying words from its title."
-  )
-  @GetMapping(path = "contains/{text}")
-  public Collection<TaskViewDto> findAllWithGivenSubstringInTitle(@PathVariable String text) {
-    return taskService.findAllWithGivenSubstringInTitle(text);
+  @GetMapping("/sort-and-filter/{categoryName}")
+  public ResponseEntity<List<TaskViewDto>> getByCategoryAndSort(@PathVariable String categoryName,
+      @RequestParam("sortBy") @Pattern(regexp = "priority|status|disabled", message = "must be 'priority', 'status' or 'disabled'") String sortBy)
+      throws ServiceLayerException {
+    return ResponseEntity.ok(taskService.getByCategoryAndSort(categoryName, sortBy));
   }
 
   @GetMapping
@@ -78,29 +84,14 @@ public class TaskController {
     return taskService.getAll();
   }
 
-  @GetMapping("/categories/{categoryName}")
-  public List<TaskViewDto> getByCategory(@PathVariable String categoryName) {
-    return taskService.getByCategory(categoryName);
-  }
-
-  @GetMapping("/categories/{categoryName}/sortStatus")
-  public List<TaskViewDto> getByCategorySortByStatus(@PathVariable String categoryName) {
-    return taskService.getByCategorySortByStatus(categoryName);
-  }
-
-  @GetMapping("/categories/{categoryName}/sortPriority")
-  public List<TaskViewDto> getByCategorySortByPriority(@PathVariable String categoryName) {
-    return taskService.getByCategorySortByPriority(categoryName);
-  }
-
-
   @Operation(
       summary = "Update task",
       description = "Update already existing task."
   )
   @PutMapping(value = "{id}")
-  public ResponseEntity<TaskViewDto> update(@PathVariable Long id, @RequestBody TaskCreateDto taskCreateDto) throws ServiceLayerException {
-      return ResponseEntity.ok(taskService.update(id, taskCreateDto));
+  public ResponseEntity<TaskViewDto> update(@PathVariable Long id,
+      @RequestBody TaskCreateDto taskCreateDto) throws ServiceLayerException {
+    return ResponseEntity.ok(taskService.update(id, taskCreateDto));
   }
 
   @Operation(
