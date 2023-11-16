@@ -4,6 +4,7 @@ import com.justDoIt.backend.entities.enums.Priority;
 import com.justDoIt.backend.entities.enums.Status;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -28,8 +29,7 @@ public class TaskCreateDto {
   @NotNull(message = "must not be null")
   @Pattern(regexp = "(?i)^(todo|done)$", message = "must be TODO or DONE")
   private String status;
-  @NotNull
-  @Min(value = 0L, message = "must be greater than or equal to 0")
-  private Long categoryId;
+  @NotBlank(message = "must not be blank")
+  private String categoryId;
 
 }

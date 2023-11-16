@@ -1,26 +1,19 @@
 package com.justDoIt.backend.controllers;
 
-import com.justDoIt.backend.entities.Category;
 import com.justDoIt.backend.entities.Task;
 import com.justDoIt.backend.entities.TaskCreateDto;
 import com.justDoIt.backend.entities.TaskViewDto;
-import com.justDoIt.backend.exceptions.CategoryNotFoundException;
-import com.justDoIt.backend.exceptions.ServiceLayerException;
+import com.justDoIt.backend.exceptions.ServiceNotFoundException;
+import com.justDoIt.backend.exceptions.WrongIdFormatException;
 import com.justDoIt.backend.services.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import java.security.Provider.Service;
-import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.hibernate.cache.CacheException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,7 +40,7 @@ public class TaskController {
 
   @PostMapping
   public ResponseEntity<TaskViewDto> create(@RequestBody @Valid TaskCreateDto taskCreateDto)
-      throws ServiceLayerException {
+      throws ServiceNotFoundException, WrongIdFormatException {
     return ResponseEntity.status(HttpStatus.CREATED).body(taskService.create(taskCreateDto));
   }
 
@@ -68,7 +61,7 @@ public class TaskController {
   public ResponseEntity<List<TaskViewDto>> getByIdOrContainingNameInTitle(
       @RequestParam("searchBy") @Pattern(regexp = "id|name", message = "must be 'id' or 'name'") String searchBy,
       @PathVariable("identifier") String identifier)
-      throws ServiceLayerException {
+      throws ServiceNotFoundException, WrongIdFormatException {
     return ResponseEntity.status(HttpStatus.OK)
         .body(taskService.getByIdOrContainingTextInTitle(searchBy, identifier));
   }
@@ -76,7 +69,7 @@ public class TaskController {
   @GetMapping("/sort-and-filter")
   public ResponseEntity<List<TaskViewDto>> getByCategoryAndSort(@RequestParam(required = false) String categoryName,
       @RequestParam("sortBy") @Pattern(regexp = "priority|status|disabled", message = "must be 'priority', 'status' or 'disabled'") String sortBy)
-      throws ServiceLayerException {
+      throws ServiceNotFoundException {
     return ResponseEntity.ok(taskService.getByCategoryAndSort(categoryName, sortBy));
   }
 
@@ -91,7 +84,7 @@ public class TaskController {
   )
   @PutMapping(value = "{id}")
   public ResponseEntity<TaskViewDto> update(@PathVariable Long id,
-      @RequestBody TaskCreateDto taskCreateDto) throws ServiceLayerException {
+      @RequestBody TaskCreateDto taskCreateDto) throws ServiceNotFoundException, WrongIdFormatException {
     return ResponseEntity.ok(taskService.update(id, taskCreateDto));
   }
 

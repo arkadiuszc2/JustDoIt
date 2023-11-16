@@ -4,7 +4,7 @@ import com.justDoIt.backend.entities.Category;
 import com.justDoIt.backend.entities.CategoryCreateDto;
 import com.justDoIt.backend.exceptions.CategoryNameNotUniqueException;
 import com.justDoIt.backend.exceptions.CategoryNotFoundException;
-import com.justDoIt.backend.exceptions.ServiceLayerException;
+import com.justDoIt.backend.exceptions.ServiceNotFoundException;
 import com.justDoIt.backend.exceptions.SearchModeNotFoundException;
 import com.justDoIt.backend.mappings.CategoryCreateMapper;
 import com.justDoIt.backend.repositories.CategoryRepository;
@@ -22,7 +22,7 @@ public class CategoryService {
   private final TaskRepository taskRepository;
   private final CategoryCreateMapper categoryCreateMapper;
 
-  public Category create(CategoryCreateDto categoryCreateDto) throws ServiceLayerException {
+  public Category create(CategoryCreateDto categoryCreateDto) throws ServiceNotFoundException {
     Category category = categoryCreateMapper.toEntity(categoryCreateDto);
     if (categoryRepository.existsByName(category.getName())) {
       throw new CategoryNameNotUniqueException("Category name must be unique");
@@ -31,7 +31,7 @@ public class CategoryService {
   }
 
   public List<Category> getByIdOrContainingTextInName(String searchBy, String identifier)
-      throws ServiceLayerException {
+      throws ServiceNotFoundException {
     List<Category> categoryList = new ArrayList<>();
     if (searchBy.equals("id")) {
       Long id = Long.parseLong(identifier);
@@ -56,7 +56,7 @@ public class CategoryService {
   }
 
   public Category update(Long id, CategoryCreateDto categoryCreateDto)
-      throws ServiceLayerException {
+      throws ServiceNotFoundException {
     Category category = categoryRepository.findById(id)
         .orElseThrow(() -> new CategoryNotFoundException("Category with given id does not exist"));
     category.setDescription(categoryCreateDto.getDescription());
@@ -64,8 +64,11 @@ public class CategoryService {
     return categoryRepository.save(category);
   }
 
-  public void delete(Long id) {
-    taskRepository.findAllByCategory_Id(id).forEach(task -> task.setCategory(null));
+  public void delete(Long id) throws ServiceNotFoundException {
+    if(!taskRepository.existsById(id)){
+      throw new CategoryNotFoundException("Category with given id does not exist");
+    }
+    taskRepository.findAllByCategory_Id(id).forEach(task -> taskRepository.deleteById(task.getId()));
     categoryRepository.deleteById(id);
   }
 }

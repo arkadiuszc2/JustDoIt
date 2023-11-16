@@ -5,7 +5,7 @@ import com.justDoIt.backend.entities.Task;
 import com.justDoIt.backend.entities.TaskCreateDto;
 import com.justDoIt.backend.entities.TaskViewDto;
 import com.justDoIt.backend.exceptions.CategoryNotFoundException;
-import com.justDoIt.backend.exceptions.ServiceLayerException;
+import com.justDoIt.backend.exceptions.ServiceNotFoundException;
 import com.justDoIt.backend.exceptions.TaskNotFoundException;
 import com.justDoIt.backend.exceptions.SearchModeNotFoundException;
 import com.justDoIt.backend.exceptions.SortModeNotFoundException;
@@ -31,30 +31,20 @@ public class TaskService {
   private final TaskCreateMapper taskCreateMapper;
 
   public TaskViewDto create(TaskCreateDto taskCreateDto)
-      throws ServiceLayerException { //change to pick category by name not id
+      throws ServiceNotFoundException, WrongIdFormatException {
     Task task = taskCreateMapper.toEntity(taskCreateDto);
-    Long categoryId = taskCreateDto.getCategoryId();
-    if (categoryId != null) {
-      Category category = categoryRepository.findById(categoryId)
-          .orElseThrow(
-              () -> new CategoryNotFoundException("Category with given id does not exist"));
-      task.setCategory(category);
-    } else {
-      task.setCategory(null);
-    }
+    Long categoryId = checkCategoryIdFormat(taskCreateDto.getCategoryId());
+    Category category = categoryRepository.findById(categoryId).
+        orElseThrow(() -> new CategoryNotFoundException("Category with given id does not exist"));
+    task.setCategory(category);
     return taskViewMapper.toDto(taskRepository.save(task));
   }
 
   public List<TaskViewDto> getByIdOrContainingTextInTitle(String searchBy, String identifier)
-      throws ServiceLayerException {
+      throws ServiceNotFoundException, WrongIdFormatException {
     List<TaskViewDto> taskList = new ArrayList<>();
     if (searchBy.equals("id")) {
-      Long id;
-      try {
-        id = Long.parseLong(identifier);
-      } catch (NumberFormatException ex) {
-        throw new WrongIdFormatException("Provided wrong id format");
-      }
+      Long id = checkCategoryIdFormat(identifier);
       taskList.add(taskViewMapper.toDto(taskRepository.findById(id)
           .orElseThrow(() -> new TaskNotFoundException("Task with given id does not exist"))));
     } else if (searchBy.equals("name")) {
@@ -72,7 +62,7 @@ public class TaskService {
   }
 
   public List<TaskViewDto> getByCategoryAndSort(String categoryName, String sortBy)
-      throws ServiceLayerException {
+      throws ServiceNotFoundException {
     Stream<Task> taskStream;
     if (categoryName != null) {
       Category category = categoryRepository.getCategoryByName(categoryName).orElseThrow(
@@ -85,27 +75,18 @@ public class TaskService {
     return taskStream.map(taskViewMapper::toDto).toList();
   }
 
-  private Stream<Task> sortTaskStream(Stream<Task> taskStream, String sortBy)
-      throws SortModeNotFoundException {
-    taskStream = switch (sortBy) {
-      case "disabled" -> taskStream;
-      case "priority" -> taskStream.sorted(Comparator.comparing(Task::getPriority));
-      case "status" -> taskStream.sorted(Comparator.comparing(Task::getStatus));
-      default -> throw new SortModeNotFoundException("Procided sort mode does not exist");
-    };
-    return taskStream;
-  }
-
   public List<TaskViewDto> getAll() {
     return taskRepository.findAll().stream().map(taskViewMapper::toDto).toList();
   }
 
-  public TaskViewDto update(Long id, TaskCreateDto taskCreateDto) throws ServiceLayerException {
+  public TaskViewDto update(Long id, TaskCreateDto taskCreateDto)
+      throws ServiceNotFoundException, WrongIdFormatException {
     taskRepository.findById(id)
         .orElseThrow(() -> new TaskNotFoundException("Task with given id does not exist"));
     Task task = taskCreateMapper.toEntity(taskCreateDto);
     task.setId(id);
-    Category category = categoryRepository.findById(taskCreateDto.getCategoryId())
+    Long categoryId = checkCategoryIdFormat(taskCreateDto.getCategoryId());
+    Category category = categoryRepository.findById(categoryId)
         .orElseThrow(
             () -> new CategoryNotFoundException("Category with given id does not exist"));
     task.setCategory(category);
@@ -117,16 +98,24 @@ public class TaskService {
     taskRepository.deleteById(id);
   }
 
-  private List<Task> getTaskEntityByCategoryName(String categoryName) {
-    List<Task> taskList = taskRepository.findAll().stream().toList();
-    List<Task> filteredList = new ArrayList<Task>();
-    for (Task task : taskList) {
-      if (task.getCategory() != null) {
-        if (task.getCategory().getName().equals(categoryName)) {
-          filteredList.add(task);
-        }
-      }
+  private Stream<Task> sortTaskStream(Stream<Task> taskStream, String sortBy)
+      throws SortModeNotFoundException {
+    taskStream = switch (sortBy) {
+      case "disabled" -> taskStream;
+      case "priority" -> taskStream.sorted(Comparator.comparing(Task::getPriority));
+      case "status" -> taskStream.sorted(Comparator.comparing(Task::getStatus));
+      default -> throw new SortModeNotFoundException("Provided sort mode does not exist");
+    };
+    return taskStream;
+  }
+
+  private Long checkCategoryIdFormat(String id) throws WrongIdFormatException {
+    Long categoryId;
+    try {
+      categoryId = Long.parseLong(id);
+    } catch (NumberFormatException ex) {
+      throw new WrongIdFormatException("Provided wrong id format - must be integer");
     }
-    return filteredList;
+    return categoryId;
   }
 }
