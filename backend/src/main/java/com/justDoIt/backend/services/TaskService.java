@@ -9,6 +9,7 @@ import com.justDoIt.backend.exceptions.ServiceLayerException;
 import com.justDoIt.backend.exceptions.TaskNotFoundException;
 import com.justDoIt.backend.exceptions.SearchModeNotFoundException;
 import com.justDoIt.backend.exceptions.SortModeNotFoundException;
+import com.justDoIt.backend.exceptions.WrongIdFormatException;
 import com.justDoIt.backend.mappings.TaskCreateMapper;
 import com.justDoIt.backend.mappings.TaskViewMapper;
 import com.justDoIt.backend.repositories.CategoryRepository;
@@ -48,7 +49,12 @@ public class TaskService {
       throws ServiceLayerException {
     List<TaskViewDto> taskList = new ArrayList<>();
     if (searchBy.equals("id")) {
-      Long id = Long.parseLong(identifier);
+      Long id;
+      try {
+        id = Long.parseLong(identifier);
+      } catch (NumberFormatException ex) {
+        throw new WrongIdFormatException("Provided wrong id format");
+      }
       taskList.add(taskViewMapper.toDto(taskRepository.findById(id)
           .orElseThrow(() -> new TaskNotFoundException("Task with given id does not exist"))));
     } else if (searchBy.equals("name")) {
@@ -66,9 +72,9 @@ public class TaskService {
   }
 
   public List<TaskViewDto> getByCategoryAndSort(String categoryName, String sortBy)
-      throws ServiceLayerException{
+      throws ServiceLayerException {
     Stream<Task> taskStream;
-    if (categoryName!=null) {
+    if (categoryName != null) {
       Category category = categoryRepository.getCategoryByName(categoryName).orElseThrow(
           () -> new CategoryNotFoundException("Category with given name does not exist"));
       taskStream = taskRepository.findAllByCategory_Id(category.getId()).stream();
@@ -79,7 +85,8 @@ public class TaskService {
     return taskStream.map(taskViewMapper::toDto).toList();
   }
 
-  private Stream<Task> sortTaskStream(Stream<Task> taskStream, String sortBy) throws SortModeNotFoundException {
+  private Stream<Task> sortTaskStream(Stream<Task> taskStream, String sortBy)
+      throws SortModeNotFoundException {
     taskStream = switch (sortBy) {
       case "disabled" -> taskStream;
       case "priority" -> taskStream.sorted(Comparator.comparing(Task::getPriority));

@@ -67,7 +67,7 @@ public class TaskController {
   @GetMapping("/{identifier}")
   public ResponseEntity<List<TaskViewDto>> getByIdOrContainingNameInTitle(
       @RequestParam("searchBy") @Pattern(regexp = "id|name", message = "must be 'id' or 'name'") String searchBy,
-      @PathVariable("identifier") @Pattern(regexp = "^[1-9][0-9]*$") String identifier)
+      @PathVariable("identifier") String identifier)
       throws ServiceLayerException {
     return ResponseEntity.status(HttpStatus.OK)
         .body(taskService.getByIdOrContainingTextInTitle(searchBy, identifier));

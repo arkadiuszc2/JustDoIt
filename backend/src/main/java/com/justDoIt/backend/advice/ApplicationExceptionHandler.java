@@ -4,6 +4,7 @@ import com.justDoIt.backend.exceptions.CategoryNameNotUniqueException;
 import com.justDoIt.backend.exceptions.CategoryNotFoundException;
 import com.justDoIt.backend.exceptions.ServiceLayerException;
 import com.justDoIt.backend.exceptions.TaskNotFoundException;
+import com.justDoIt.backend.exceptions.WrongIdFormatException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -18,18 +19,20 @@ public class ApplicationExceptionHandler {
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler({CategoryNameNotUniqueException.class})
-  public Map<String, String> handleNotUniqueNameExceptions(ServiceLayerException ex) {
-    Map<String, String> errorMap = new HashMap<>();
-    errorMap.put("An error occured: ", ex.getMessage());
-    return errorMap;
+  public Map<String, String> handleNotUniqueNameExceptions(CategoryNameNotUniqueException ex) {
+    return createErrorMap(ex);
+  }
+
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler({WrongIdFormatException.class})
+  public Map<String, String> handleWrongFormatExceptions(WrongIdFormatException ex) {
+    return createErrorMap(ex);
   }
 
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ExceptionHandler({ServiceLayerException.class})
   public Map<String, String> handleNotFoundExceptions(ServiceLayerException ex) {
-    Map<String, String> errorMap = new HashMap<>();
-    errorMap.put("An error occured: ", ex.getMessage());
-    return errorMap;
+    return createErrorMap(ex);
   }
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -38,6 +41,12 @@ public class ApplicationExceptionHandler {
     Map<String, String> errorMap = new HashMap<>();
     ex.getBindingResult().getFieldErrors()
         .forEach(fieldError -> errorMap.put(fieldError.getField(), fieldError.getDefaultMessage()));
+    return errorMap;
+  }
+
+  private Map<String,String> createErrorMap(ServiceLayerException ex){
+    Map<String, String> errorMap = new HashMap<>();
+    errorMap.put("An error occured: ", ex.getMessage());
     return errorMap;
   }
 }
