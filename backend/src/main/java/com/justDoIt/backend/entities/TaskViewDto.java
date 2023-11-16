@@ -16,5 +16,5 @@ public class TaskViewDto {
   private String description;
   private Priority priority;
   private Status status;
-  private Long categoryId; //should be changed to category_name or category_id
+  private Long categoryId;
 }

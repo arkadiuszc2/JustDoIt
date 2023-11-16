@@ -35,7 +35,7 @@ public class TaskController {
 
   @Operation(
       summary = "Create task",
-      description = "Create new task."
+      description = "Create new task"
   )
 
   @PostMapping
@@ -45,8 +45,9 @@ public class TaskController {
   }
 
   @Operation(
-      summary = "Find task by id",
-      description = "Find a task by providing its id."
+      summary = "Find task by id or name",
+      description = "Find a task by providing its id (to search for one specific task) "
+          + "or provide task title (all tasks with title containing provided keyword will be shown)"
   )
   @ApiResponse(
       responseCode = "200",
@@ -65,32 +66,32 @@ public class TaskController {
     return ResponseEntity.status(HttpStatus.OK)
         .body(taskService.getByIdOrContainingTextInTitle(searchBy, identifier));
   }
-
+  @Operation(
+      summary = "Filter and sort tasks",
+      description = "Filter tasks by category name and sort by priority or status. If category name is not provided all tasks are shown"
+  )
   @GetMapping("/sort-and-filter")
-  public ResponseEntity<List<TaskViewDto>> getByCategoryAndSort(@RequestParam(required = false) String categoryName,
+  public ResponseEntity<List<TaskViewDto>> getByCategoryAndSort(
+      @RequestParam(required = false) String categoryName,
       @RequestParam("sortBy") @Pattern(regexp = "priority|status|disabled", message = "must be 'priority', 'status' or 'disabled'") String sortBy)
       throws ServiceNotFoundException {
     return ResponseEntity.ok(taskService.getByCategoryAndSort(categoryName, sortBy));
   }
 
-  @GetMapping
-  public List<TaskViewDto> getAll() {
-    return taskService.getAll();
-  }
-
   @Operation(
       summary = "Update task",
-      description = "Update already existing task."
+      description = "Update already existing task"
   )
   @PutMapping(value = "{id}")
   public ResponseEntity<TaskViewDto> update(@PathVariable Long id,
-      @RequestBody TaskCreateDto taskCreateDto) throws ServiceNotFoundException, WrongIdFormatException {
+      @RequestBody TaskCreateDto taskCreateDto)
+      throws ServiceNotFoundException, WrongIdFormatException {
     return ResponseEntity.ok(taskService.update(id, taskCreateDto));
   }
 
   @Operation(
       summary = "Delete task",
-      description = "Delete existing task."
+      description = "Delete existing task"
   )
   @DeleteMapping("/{id}")
   public void deleteTask(@PathVariable Long id) {

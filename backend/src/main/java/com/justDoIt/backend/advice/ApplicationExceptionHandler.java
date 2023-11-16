@@ -48,7 +48,7 @@ public class ApplicationExceptionHandler {
     return errorMap;
   }
 
-  private Map<String,String> createErrorMap(Exception ex){
+  private Map<String, String> createErrorMap(Exception ex) {
     Map<String, String> errorMap = new HashMap<>();
     errorMap.put("An error occured:", ex.getMessage());
     return errorMap;

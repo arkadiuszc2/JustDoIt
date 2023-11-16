@@ -4,6 +4,7 @@ import com.justDoIt.backend.entities.Category;
 import com.justDoIt.backend.entities.CategoryCreateDto;
 import com.justDoIt.backend.exceptions.ServiceNotFoundException;
 import com.justDoIt.backend.services.CategoryService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.executable.ValidateOnExecution;
@@ -28,13 +29,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoryController {
 
   private final CategoryService categoryService;
-
+  @Operation(
+      summary = "Create new category",
+      description = "Create new category with unique name"
+  )
   @PostMapping
   public Category create(@RequestBody @Valid CategoryCreateDto categoryCreateDto)
       throws ServiceNotFoundException {
     return categoryService.create(categoryCreateDto);
   }
-
+  @Operation(
+      summary = "Find categories by id or name",
+      description = "Find category by providing its id (to search for one specific category) "
+          + "or provide task name (all categories with title containing provided keyword will be shown)"
+  )
   @GetMapping("/{identifier}")
   public ResponseEntity<List<Category>> getByIdOrContainingTextInName(
       @RequestParam("searchBy") @Pattern(regexp = "id|name", message = "must be 'id' or 'name'") String searchBy,
@@ -43,18 +51,28 @@ public class CategoryController {
     return ResponseEntity.status(HttpStatus.OK)
         .body(categoryService.getByIdOrContainingTextInName(searchBy, identifier));
   }
-
+  @Operation(
+      summary = "Get all categories",
+      description = "Get all exisiting categories"
+  )
   @GetMapping
   public List<Category> getAll() {
     return categoryService.getAll();
   }
 
+  @Operation(
+      summary = "Update category",
+      description = "Update existing category"
+  )
   @PutMapping("/{id}")
   public ResponseEntity<Category> update(@PathVariable Long id,
       @RequestBody CategoryCreateDto categoryCreateDto) throws ServiceNotFoundException {
     return ResponseEntity.ok(categoryService.update(id, categoryCreateDto));
   }
-
+  @Operation(
+      summary = "Delete category",
+      description = "Delete category and all tasks which belong to this category"
+  )
   @DeleteMapping("/{id}")
   public void delete(@PathVariable Long id) throws ServiceNotFoundException {
     categoryService.delete(id);

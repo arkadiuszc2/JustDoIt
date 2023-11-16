@@ -65,10 +65,11 @@ public class CategoryService {
   }
 
   public void delete(Long id) throws ServiceNotFoundException {
-    if(!taskRepository.existsById(id)){
+    if (!taskRepository.existsById(id)) {
       throw new CategoryNotFoundException("Category with given id does not exist");
     }
-    taskRepository.findAllByCategory_Id(id).forEach(task -> taskRepository.deleteById(task.getId()));
+    taskRepository.findAllByCategory_Id(id)
+        .forEach(task -> taskRepository.deleteById(task.getId()));
     categoryRepository.deleteById(id);
   }
 }

@@ -75,9 +75,6 @@ public class TaskService {
     return taskStream.map(taskViewMapper::toDto).toList();
   }
 
-  public List<TaskViewDto> getAll() {
-    return taskRepository.findAll().stream().map(taskViewMapper::toDto).toList();
-  }
 
   public TaskViewDto update(Long id, TaskCreateDto taskCreateDto)
       throws ServiceNotFoundException, WrongIdFormatException {

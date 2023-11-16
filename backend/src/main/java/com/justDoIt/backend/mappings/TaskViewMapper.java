@@ -11,7 +11,4 @@ public interface TaskViewMapper {
 
   @Mapping(source = "category.id", target = "categoryId")
   TaskViewDto toDto(Task task);
-
-  Task toEntity(
-      TaskViewDto taskViewDto); //is it even used? (probably create mapper is used instead)
 }
