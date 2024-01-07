@@ -47,8 +47,12 @@
   padding: 14px;
 }
 
+.task-preview h2{
+  color: #FF8C00;
+}
+
 .task-preview:hover{
-  box-shadow: 1px 1px 5px 3px #FF8C00;
+  box-shadow: 1px 1px 5px 3px #808080;
 }
 
 .home button{
