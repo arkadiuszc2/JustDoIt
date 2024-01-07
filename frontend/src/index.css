@@ -28,9 +28,44 @@
 .navbar a:hover {
   color: #FF8C00;
 }
-.content {
+.home {
   max-width: 600px; /* defines box width */
   margin: 0 auto;   /* defines margins for the box */
   padding: 20px;    /* define padding between the box and other items (not items inside the box)*/
   text-align: center; /* text-allign allign text inside the box */
+}
+
+.tasks{
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.task-preview {
+  width: 500px;
+  padding: 14px;
+}
+
+.task-preview:hover{
+  box-shadow: 1px 1px 5px 3px #FF8C00;
+}
+
+.home button{
+  width: 80px;
+  margin: 10px;
+  padding: 5px;
+  background-color: #FF8C00;  
+  border-style: solid;
+  border-color: #DCDCDC;
+  border-width: 3px;
+  border-radius: 25px;
+}
+
+.home button:hover{
+  background-color: red;
+}
+
+.home button:active{
+  background-color: #B22222;
 }

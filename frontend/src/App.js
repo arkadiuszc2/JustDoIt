@@ -1,12 +1,12 @@
 import Navbar from './Navbar';
-import Home from './Home';
+import Tasks from './Tasks';
 
 function App() {
   return (
     <div className="App">
       <Navbar />
       <div className="content">
-      <Home />
+      <Tasks />
       </div>
     </div>
   );

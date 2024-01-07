@@ -4,6 +4,7 @@ const Navbar = () => {
             <h1>JustDoIt</h1>
             <div className="links">
                 <a href="/">Home</a>
+                <a href="/tasks">Tasks</a>
                 <a href="/create">New Task</a>
             </div>
         </nav>
