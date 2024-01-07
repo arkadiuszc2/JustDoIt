@@ -35,16 +35,22 @@
   text-align: center; /* text-allign allign text inside the box */
 }
 
-.tasks{
+.task-list{
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
+
+}
+
+.task-list h1{
+  padding: 12px;
 }
 
 .task-preview {
   width: 500px;
   padding: 14px;
+  margin: 0 auto;
 }
 
 .task-preview h2{
