@@ -9,8 +9,13 @@ const Tasks = () => {
     ])
     const taskListTitle = 'All tasks';
 
+    const handleDelete = (id) => {
+        const newTasksList = tasks.filter(task => task.id!==id)
+        setTasks(newTasksList);
+    }
+
     return ( 
-        <TaskList tasks={tasks} title={taskListTitle} />
+        <TaskList tasks={tasks} title={taskListTitle} handleDelete={handleDelete}/>
      );
 }
  
