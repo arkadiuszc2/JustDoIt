@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import TaskList from "./TaskList";
-import { tasksApi } from "./TasksApi";
+import { tasksApi } from "./tasksApi";
 
 const Tasks = () => {
     const [tasks, setTasks] = useState([]);
