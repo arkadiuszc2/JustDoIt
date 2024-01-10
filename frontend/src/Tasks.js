@@ -1,18 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TaskList from "./TaskList";
+import { tasksApi } from "./TasksApi";
 
 const Tasks = () => {
-    const [tasks, setTasks] = useState([
-        { title: 'Workouts', content: 'Pushups 10x3, Pullups 10x3, Squats 10x3', category: 'Sport', id: 1},
-        { title: 'Create new endpoint', content: 'Finish the project', category: 'Work', id: 2},
-        { title: 'Do homework', content: 'Do 5 math exercises', category: 'School', id: 3}
-    ])
+    const [tasks, setTasks] = useState([]);
     const taskListTitle = 'All tasks';
 
     const handleDelete = (id) => {
-        const newTasksList = tasks.filter(task => task.id!==id)
+        const newTasksList = tasks.filter(task => task.id !== id);
         setTasks(newTasksList);
     }
+
+    // note - on strict mode react renders components twice, so it will run 2 times
+    useEffect(() => {
+        tasksApi.getAll()
+        .then((response) => {
+            setTasks(response.data)
+        })
+        .catch(error => console.error('Fetch error: ', error))  // u can output multiple objects in error
+    }, []);
 
     return ( 
         <TaskList tasks={tasks} title={taskListTitle} handleDelete={handleDelete}/>
