@@ -1,3 +1,20 @@
+springdoc:
+  swagger-ui:
+    tryItOutEnabled: true
+    operationsSorter: method
+    tagsSorter: alpha
+    filter: true
+
+app:
+  cors:
+    allowed-origins: http://localhost:3000
+
+logging:
+  level:
+    com.example.backend: DEBUG
+
+---
+
 spring:
   config:
     activate:
@@ -11,9 +28,14 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: create-drop # (create, create-drop, validate, update)
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
 ---
 
 spring:
