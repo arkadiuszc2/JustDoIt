@@ -1,5 +1,5 @@
-import Navbar from './Navbar';
-import Tasks from './Tasks';
+import Navbar from './components/Navbar';
+import Tasks from './components/Tasks';
 
 function App() {
   return (
