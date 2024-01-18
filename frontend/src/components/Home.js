@@ -9,7 +9,7 @@ const Home = () => {
     const [reaction, setReaction] = useState('Give us a like!')
 
     const handleClick = (e) => {
-        setReaction('Thanks for liking us!');
+        setReaction('Thank you!');
     }
 
     return ( 
