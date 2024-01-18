@@ -10,5 +10,6 @@ import org.mapstruct.factory.Mappers;
 public interface TaskViewMapper {
 
   @Mapping(source = "category.id", target = "categoryId")
+  @Mapping(source = "category.name", target = "categoryName")
   TaskViewDto toDto(Task task);
 }

@@ -17,4 +17,5 @@ public class TaskViewDto {
   private Priority priority;
   private Status status;
   private Long categoryId;
+  private String categoryName;
 }
