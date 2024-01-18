@@ -1,3 +1,5 @@
+import './TaskList.css'
+
 const TaskList = (props) => {
     const tasks = props.tasks;
     const title = props.title;
@@ -10,7 +12,7 @@ const TaskList = (props) => {
                 <div className="task-preview" key={task.id}>
                     <div className="task-preview-content">
                         <h2>{ task.title }</h2>
-                        <p>{ task.categoryId }</p>
+                        <p>{ task.categoryName }</p>
                     </div>
                     <div className="task-preview-buttons">
                         <button onClick={() => handleDelete(task.id)}>Delete</button>
