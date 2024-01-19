@@ -1,7 +1,7 @@
 import Navbar from './components/Navbar';
 import Tasks from './components/Tasks';
+import Home from './components/Home';
 import TaskForm from './components/TaskForm';
-import Home from './components/Home'
 import { Route, Routes } from 'react-router-dom';
 
 function App() {

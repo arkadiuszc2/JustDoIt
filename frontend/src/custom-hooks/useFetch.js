@@ -10,7 +10,8 @@ const useFetch = (apiMethod) => {
         setTimeout(() => {              //timeout for testing only
             apiMethod()
                 .then(response => {
-                    if (!response.ok) {
+                    if (response.status !== 200) {
+                        console.log(response.status);
                         throw Error("Error: could not fetch data");
                     }
                     return response;
@@ -19,6 +20,7 @@ const useFetch = (apiMethod) => {
                     setData(data)
                     setIsPending(false);
                     setError(null);
+                    console.log("Fetching done");
                 })
                 .catch(error => {
                     setError(error);

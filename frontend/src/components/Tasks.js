@@ -5,7 +5,7 @@ import useFetch from "../custom-hooks/useFetch";
 
 const Tasks = () => {
     const taskListTitle = 'All tasks';
-    const {data: tasks, isPending, error} = useFetch(tasksApi.getAll)
+    const {data: tasks, isPending, error} = useFetch(tasksApi.getAll);
 
     const handleDelete = (id) => {
         //const newTasksList = tasks.filter(task => task.id !== id);
@@ -15,11 +15,12 @@ const Tasks = () => {
 
     return (
         <div className="tasks">
-            {error && <div className="taskError">{error}</div>}
+            {error && <div className="taskError">{error.message}</div>}
             {isPending && <div className="loading"><p>Loading...</p></div>}
             {tasks && <TaskList tasks={tasks} title={taskListTitle} handleDelete={handleDelete} />}
         </div>
     );
+    
 }
 
 export default Tasks;

@@ -1,14 +1,14 @@
 import './TaskList.css'
 
 const TaskList = (props) => {
-    const tasks = props.tasks;
+    const tasks = props.tasks.data;
     const title = props.title;
     const handleDelete = props.handleDelete;
 
     return ( 
         <div className="task-list">
             <h1>{title}</h1>
-            {tasks.map((task) => (
+            {tasks.map(task => (
                 <div className="task-preview" key={task.id}>
                     <div className="task-preview-content">
                         <h2>{ task.title }</h2>
