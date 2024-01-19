@@ -42,3 +42,7 @@
   .task-preview:hover{
     box-shadow: 1px 1px 5px 3px #808080;
   }
+
+  .task-preview a{
+    text-decoration: none;  /* disable underline of Link elements, link is treated like a element*/
+  }

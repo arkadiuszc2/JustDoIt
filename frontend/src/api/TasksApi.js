@@ -10,5 +10,14 @@ export const tasksApi = {
             sortBy: 'disabled'
         }
     })
+  },
+
+  getById (id) {
+    console.log('Get task', id)
+    return noteClient.get(`/${id}`, {
+      params: {
+        searchBy: 'id'
+    }
+    })
   }
 }
