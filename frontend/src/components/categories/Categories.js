@@ -1,5 +1,5 @@
 import CategoriesList from "./CategoriesList";
-import './Tasks.css'
+import './Categories.css'
 import useFetch from "../../custom-hooks/useFetch";
 import { Link } from "react-router-dom";
 import { categoriesApi } from "../../api/CategoriesApi";

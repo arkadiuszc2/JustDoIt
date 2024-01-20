@@ -14,13 +14,11 @@
     background-color: lightcoral;
 }
 
-.tasks-add-link {
-    max-width: fit-content;
-    margin: 0px 0px 0px 70%;
+.task-add-link{
+    margin-left: 50%;
 }
 
-.tasks-add-link button{
-    margin-top: 20px;
+.task-add-link button{
     padding: 10px;
     background-color: #FF8C00;
     border-width: 3px;
@@ -29,10 +27,33 @@
     border-style: solid;
 }
 
-.tasks-add-link button:hover{
+.task-add-link button:hover{
     background-color: orangered;
   }
 
-.tasks-add-link button:active{
+.task-add-link button:active{
     box-shadow: 1px 1px 5px 3px #808080;
   }
+.search-menu {
+    justify-content: center;
+    display: flex;
+    margin: 10px;
+ }
+
+.search-menu form{
+    display: flex;
+}
+
+.search-menu form label{
+    margin-right: 10px;
+}
+
+.radio-group label, .radio-group input{
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.search-menu form button{
+    margin-left: 10px;
+}
+
