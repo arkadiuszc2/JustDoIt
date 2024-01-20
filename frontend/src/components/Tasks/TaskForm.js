@@ -12,7 +12,7 @@ const TaskForm = () => {
         title: '',
         description: '',
         priority: 'HIGH',
-        status: 'TTODO',
+        status: 'TODO',
         categoryName: ''
     })
 

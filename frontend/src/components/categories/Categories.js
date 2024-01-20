@@ -1,26 +1,26 @@
-// import TaskList from "./TaskList";
-// import { tasksApi } from "../../api/TasksApi";
-// import './Tasks.css'
-// import useFetch from "../../custom-hooks/useFetch";
-// import { Link } from "react-router-dom";
+import CategoriesList from "./CategoriesList";
+import './Tasks.css'
+import useFetch from "../../custom-hooks/useFetch";
+import { Link } from "react-router-dom";
+import { categoriesApi } from "../../api/CategoriesApi";
 
-// const Categories = () => {
-//     const { data: categories, isPending, error } = useFetch(categoriesApi.getAll);
+const Categories = () => {
+    const { data: categories, isPending, error } = useFetch(categoriesApi.getAll);
 
 
-//     return (
-//         <div className="tasks">
-//             <div className="tasks-add-link">
-//             <Link to={"/addTask/new"}>
-//                 <button> Add category</button>
-//             </Link>
-//             </div>
-//             {error && <div className="taskError">{error.message}</div>}
-//             {isPending && <div className="loading"><p>Loading...</p></div>}
-//             {tasks && <TaskList tasks={tasks} />}
-//         </div>
-//     );
+    return (
+        <div className="tasks">
+            <div className="tasks-add-link">
+            <Link to={"/addCategory/new"}>
+                <button> Add category</button>
+            </Link>
+            </div>
+            {error && <div className="taskError">{error.message}</div>}
+            {isPending && <div className="loading"><p>Loading...</p></div>}
+            {categories && <CategoriesList categories={categories} />}
+        </div>
+    );
 
-// }
+}
 
-// export default Tasks;
+export default Categories;
