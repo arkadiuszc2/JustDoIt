@@ -1,7 +1,7 @@
 import TaskDetails from "./TaskDetails";
 import { useParams } from "react-router-dom";
-import useFetch from "../custom-hooks/useFetch";
-import { tasksApi } from "../api/TasksApi";
+import useFetch from "../../custom-hooks/useFetch";
+import { tasksApi } from "../../api/TasksApi";
 
 
 const TaskDetailsPage = () => {

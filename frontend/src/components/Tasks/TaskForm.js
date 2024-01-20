@@ -1,6 +1,7 @@
-import { tasksApi } from '../api/TasksApi';
+import { useNavigate, useParams } from 'react-router-dom';
+import { tasksApi } from '../../api/TasksApi';
 import './TaskForm.css'
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 
 const TaskForm = () => {
     const [title, setTitle] = useState('title');
@@ -9,11 +10,32 @@ const TaskForm = () => {
     const [status, setStatus] = useState('TODO');
     const [categoryName, setCategory] = useState('');
     const [isPending, setIsPending] = useState(false);
+    const navigate = useNavigate();
+
+    const {taskId} = useParams();
+    const [task, setTask] = useState({
+        title: '',
+        description: '',
+        priority: '',
+        status: ' '
+      })
+
+    useEffect(() => {
+        if (taskId !== null) {
+          tasksApi.getById(taskId)
+            .then((res) => {
+              setTask(res.data)
+            })
+        }
+      }, [taskId])
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const task = {title, description, priority, status, categoryName};
-        tasksApi.create(task).then(setIsPending(true));
+        tasksApi.create(task).then(() => {
+            setIsPending(true);
+            navigate('/tasks');
+        });
     }
 
     return (  

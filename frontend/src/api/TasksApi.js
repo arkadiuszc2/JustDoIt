@@ -21,8 +21,18 @@ export const tasksApi = {
     })
   },
 
-  create (note) {
-    console.log('Create note', note)
-    return noteClient.post('', note)
+  create (task) {
+    console.log('Create note', task)
+    return noteClient.post('', task)
+    },
+
+    update (id, task) {
+      console.log('Update note', id, task)
+      return noteClient.put(`/${id}`, task)
+    },
+
+    delete (id) {
+      console.log('Delete note', id)
+      return noteClient.delete(`/${id}`)
     }
 }

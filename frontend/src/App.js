@@ -1,9 +1,10 @@
 import Navbar from './components/Navbar';
-import Tasks from './components/Tasks';
+import Tasks from './components/Tasks/Tasks';
 import Home from './components/Home';
-import TaskForm from './components/TaskForm';
-import TaskDetailsPage from './components/TaskDetailsPage';
+import TaskForm from './components/Tasks/TaskForm';
+import TaskDetailsPage from './components/Tasks/TaskDetailsPage';
 import { Route, Routes } from 'react-router-dom';
+import NotFoundPage from './components/NotFoundPage';
 
 function App() {
   return (
@@ -11,10 +12,11 @@ function App() {
         <Navbar />
         <div className="content">
           <Routes>
-            <Route path="/home" element={<Home />} />
+            <Route path="/" element={<Home />} />
             <Route path="/tasks" element={<Tasks />} />
-            <Route path="/addTask" element={<TaskForm />} />
+            <Route path="/addTask/:taskId" element={<TaskForm />} />
             <Route path="/tasks/:id" element={<TaskDetailsPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>
       </div>
