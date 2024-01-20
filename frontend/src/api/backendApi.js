@@ -15,7 +15,9 @@ export const backendApi = (url) => {
     return response
   }, function (error) {
     console.log('Error: An error occurred while calling backend', error)
-    console.log(error.response) //for testing
+    console.log(error.response.data) //for testing
+
+    alert(JSON.stringify(error.response.data));
     if (error.response) {
       console.log("if 1") //for testing
       // client received an error response (5xx, 4xx)

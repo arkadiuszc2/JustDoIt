@@ -12,7 +12,6 @@ const useFetch = (apiMethod, id) => {
                 .then(response => {
                     if (response.status !== 200) {
                         console.log(response.status);
-                        throw Error("Error: could not fetch data");
                     }
                     return response;
                 })
@@ -27,7 +26,7 @@ const useFetch = (apiMethod, id) => {
                     setIsPending(false);
                 })
         }, 1000);
-    }, [apiMethod]);
+    }, [apiMethod, id]);  // tu dodałem id! - moze generowac jakis blad
     return {data, isPending, error}
 }
 

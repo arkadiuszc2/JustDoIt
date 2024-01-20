@@ -1,64 +1,79 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { tasksApi } from '../../api/TasksApi';
 import './TaskForm.css'
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 
 const TaskForm = () => {
-    const [title, setTitle] = useState('title');
-    const [description, setDescription] = useState('');
-    const [priority, setPriority] = useState('HIGH');
-    const [status, setStatus] = useState('TODO');
-    const [categoryName, setCategory] = useState('');
     const [isPending, setIsPending] = useState(false);
     const navigate = useNavigate();
 
-    const {taskId} = useParams();
+    const { taskId } = useParams();
     const [task, setTask] = useState({
         title: '',
         description: '',
-        priority: '',
-        status: ' '
-      })
+        priority: 'HIGH',
+        status: 'TTODO',
+        categoryName: ''
+    })
 
     useEffect(() => {
-        if (taskId !== null) {
-          tasksApi.getById(taskId)
-            .then((res) => {
-              setTask(res.data)
-            })
+        if (taskId !== 'new') {
+            tasksApi.getById(taskId)
+                .then((res) => {
+                    setTask(res.data[0])
+                })
         }
-      }, [taskId])
+    }, [taskId])
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const task = {title, description, priority, status, categoryName};
-        tasksApi.create(task).then(() => {
+
+            if (task.id) {
+                await tasksApi.update(task.id, task);
+            } else {
+                await tasksApi.create(task);
+            }
+
             setIsPending(true);
             navigate('/tasks');
-        });
+
     }
 
-    return (  
+    const handleChange = (event) => {
+        const target = event.target
+        const value = target.value
+        const name = target.name
+
+        setTask({ ...task, [name]: value })
+    }
+
+    const pageTitle = <h2>{task.id ? 'Edit task' : 'Add task'}</h2>
+    const buttonTitle = <p>{task.id ? 'update' : 'save'}</p>
+
+    return (
         <div className="TaskForm">
-            <h2>Add a new task</h2>
+            {pageTitle}
             <form onSubmit={handleSubmit}>
                 <label>Title: </label>
                 <input
                     type="text"
                     required
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    value={task.title || ''}
+                    name='title'
+                    onChange={handleChange}
                 />
                 <label>Description: </label>
                 <textarea
                     required
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    value={task.description || ''}
+                    name='description'
+                    onChange={handleChange}
                 />
                 <label>Priority: </label>
                 <select
-                    value={priority}
-                    onChange={(e) => setPriority(e.target.value)}
+                    value={task.priority}
+                    name='priority'
+                    onChange={handleChange}
                 >
                     <option value="HIGH">HIGH</option>
                     <option value="MEDIUM">MEDIUM</option>
@@ -66,8 +81,9 @@ const TaskForm = () => {
                 </select>
                 <label>Status: </label>
                 <select
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
+                    value={task.status}
+                    name='status'
+                    onChange={handleChange}
                 >
                     <option value="TODO">TODO</option>
                     <option value="DONE">DONE</option>
@@ -76,15 +92,16 @@ const TaskForm = () => {
                 <input
                     type="text"
                     required
-                    value={categoryName}
-                    onChange={(e) => setCategory(e.target.value)}
+                    value={task.categoryName}
+                    name='categoryName'
+                    onChange={handleChange}
 
                 />
-                {!isPending && <button>Add task</button> }
-                {isPending && <button disabled>Saved</button> }
+                {!isPending && <button>{buttonTitle}</button>}
+                {isPending && <button disabled>{buttonTitle}</button>}
             </form>
         </div>
     );
 }
- 
+
 export default TaskForm;

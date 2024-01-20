@@ -1,11 +1,11 @@
 import { backendApi } from './backendApi'
 
-const noteClient = backendApi('/tasks')
+const taskClient = backendApi('/tasks')
 
 export const tasksApi = {
   getAll () {
     console.log('Fetching tasks')
-    return noteClient.get('/sort-and-filter', { 
+    return taskClient.get('/sort-and-filter', { 
         params: {
             sortBy: 'disabled'
         }
@@ -14,7 +14,7 @@ export const tasksApi = {
 
   getById (id) {
     console.log('Get task', id)
-    return noteClient.get(`/${id}`, {
+    return taskClient.get(`/${id}`, {
       params: {
         searchBy: 'id'
     }
@@ -23,16 +23,16 @@ export const tasksApi = {
 
   create (task) {
     console.log('Create note', task)
-    return noteClient.post('', task)
+    return taskClient.post('', task)
     },
 
     update (id, task) {
       console.log('Update note', id, task)
-      return noteClient.put(`/${id}`, task)
+      return taskClient.put(`/${id}`, task)
     },
 
     delete (id) {
       console.log('Delete note', id)
-      return noteClient.delete(`/${id}`)
+      return taskClient.delete(`/${id}`)
     }
 }
