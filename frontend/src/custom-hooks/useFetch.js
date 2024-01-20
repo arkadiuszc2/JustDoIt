@@ -6,8 +6,7 @@ const useFetch = (apiMethod, argument) => {
     const [error, setError] = useState(null)
 
     // note - on strict mode react renders components twice, so it will run 2 times
-    useEffect(() => {
-        setTimeout(() => {              //timeout for testing only
+    useEffect(() => {              //timeout for testing only
             apiMethod(argument)
                 .then(response => {
                     if (response.status !== 200) {
@@ -25,7 +24,6 @@ const useFetch = (apiMethod, argument) => {
                     setError(error);
                     setIsPending(false);
                 })
-        }, 1000);
     }, [apiMethod, argument]);  // tu dodałem id! - moze generowac jakis blad
     return {data, isPending, error}
 }
