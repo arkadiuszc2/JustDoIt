@@ -33,8 +33,8 @@ public class TaskService {
   public TaskViewDto create(TaskCreateDto taskCreateDto)
       throws ServiceNotFoundException, WrongIdFormatException {
     Task task = taskCreateMapper.toEntity(taskCreateDto);
-    Long categoryId = checkCategoryIdFormat(taskCreateDto.getCategoryId());
-    Category category = categoryRepository.findById(categoryId).
+    String categoryName = taskCreateDto.getCategoryName();
+    Category category = categoryRepository.getCategoryByName(categoryName).
         orElseThrow(() -> new CategoryNotFoundException("Category with given id does not exist"));
     task.setCategory(category);
     return taskViewMapper.toDto(taskRepository.save(task));
@@ -82,8 +82,8 @@ public class TaskService {
         .orElseThrow(() -> new TaskNotFoundException("Task with given id does not exist"));
     Task task = taskCreateMapper.toEntity(taskCreateDto);
     task.setId(id);
-    Long categoryId = checkCategoryIdFormat(taskCreateDto.getCategoryId());
-    Category category = categoryRepository.findById(categoryId)
+    String categoryName = taskCreateDto.getCategoryName();
+    Category category = categoryRepository.getCategoryByName(categoryName)
         .orElseThrow(
             () -> new CategoryNotFoundException("Category with given id does not exist"));
     task.setCategory(category);

@@ -23,6 +23,6 @@ public class TaskCreateDto {
   @Pattern(regexp = "(?i)^(todo|done)$", message = "must be TODO or DONE")
   private String status;
   @NotBlank(message = "must not be blank")
-  private String categoryId;
+  private String categoryName;
 
 }

@@ -1,7 +1,10 @@
 .task-details {
-    text-align: left;
+    text-align: center;
     max-width: 800px;
     margin-right: auto;
     margin-left: auto;
     margin-top: 20px;
+}
+.task-details p{
+    margin: 10px 0px 10px 0px;
 }

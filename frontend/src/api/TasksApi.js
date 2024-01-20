@@ -19,5 +19,10 @@ export const tasksApi = {
         searchBy: 'id'
     }
     })
-  }
+  },
+
+  create (note) {
+    console.log('Create note', note)
+    return noteClient.post('', note)
+    }
 }
