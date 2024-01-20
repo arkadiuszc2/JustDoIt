@@ -1,4 +1,4 @@
-package com.justDoIt.backend.configurations;
+package com.justDoIt.backend.security;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
