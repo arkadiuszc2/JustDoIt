@@ -1,16 +1,14 @@
-import { useParams } from "react-router-dom";
-import useFetch from "../custom-hooks/useFetch";
-import { tasksApi } from "../api/TasksApi";
+import './TaskDetails.css'
 
-const TaskDetails = () => {
-    const { id } = useParams();
-    const {data, error, isPending} = useFetch(tasksApi.getById, id);
+const TaskDetails = (props) => {
+    const tasks = props.tasks.data;
+
     return (
     <div className="task-details">
-        { data && (
+        { tasks && (
         <article>
-            <h2>{data.data[0].title}</h2>
-            <p>{data.data[0].description}</p>
+            <h2>{tasks[0].title}</h2>
+            <p>{tasks[0].description}</p>
         </article>)}
     </div>
     );
