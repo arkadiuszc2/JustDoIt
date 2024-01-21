@@ -12,14 +12,21 @@ import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@SuperBuilder
+@ToString(callSuper = true)
+@Getter
+@Setter
 @Entity
 @Builder
-public class Task {
+public class Task extends Auditable{
 
   @Id
   @GeneratedValue

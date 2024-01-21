@@ -18,4 +18,5 @@ public class TaskViewDto {
   private Status status;
   private Long categoryId;
   private String categoryName;
+  private String createdBy;
 }

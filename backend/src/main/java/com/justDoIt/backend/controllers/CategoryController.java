@@ -5,6 +5,7 @@ import com.justDoIt.backend.entities.CategoryCreateDto;
 import com.justDoIt.backend.exceptions.ServiceNotFoundException;
 import com.justDoIt.backend.services.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.executable.ValidateOnExecution;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearer-key")
 @RequestMapping(value = "categories")
 @ValidateOnExecution
 public class CategoryController {
