@@ -8,14 +8,16 @@ import CategoryForm from './components/categories/CategoryForm';
 import { Route, Routes } from 'react-router-dom';
 import NotFoundPage from './components/NotFoundPage';
 import Categories from './components/categories/Categories';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 function App() {
   return (
-      <div className="App">
-        <Navbar />
-        <div className="content">
-          <Routes>
-            <Route path="/" element={<Home />} />
+    <div className="App">
+      <Navbar />
+      <div className="content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route element={<ProtectedRoute />}>
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/addTask/:taskId" element={<TaskForm />} />
@@ -23,9 +25,10 @@ function App() {
             <Route path="/tasks/:id" element={<TaskDetailsPage />} />
             <Route path="/categories/:id" element={<CategoryDetailsPage />} />
             <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </div>
+          </Route>
+        </Routes>
       </div>
+    </div>
   );
 }
 

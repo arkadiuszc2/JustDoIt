@@ -2,13 +2,16 @@ import { useNavigate } from 'react-router-dom';
 import { categoriesApi } from '../../api/CategoriesApi';
 import { Link } from 'react-router-dom';
 import './TaskDetails.css'
+import { useAuth } from 'react-oidc-context';
 
 const CategoryDetails = (props) => {
+    const auth = useAuth()
+    const accessToken = auth.user.access_token
     const category = props.categories.data[0];
     const navigate = useNavigate();
 
     const handleDelete = () => {
-        categoriesApi.delete(category.id);
+        categoriesApi.delete(category.id, accessToken);
         navigate('/categories');
     }
 

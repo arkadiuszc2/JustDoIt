@@ -3,9 +3,12 @@ import './Categories.css'
 import useFetch from "../../custom-hooks/useFetch";
 import { Link } from "react-router-dom";
 import { categoriesApi } from "../../api/CategoriesApi";
+import { useAuth } from 'react-oidc-context'
 
 const Categories = () => {
-    const { data: categories, isPending, error } = useFetch(categoriesApi.getAll);
+    const auth = useAuth()
+    const accessToken = auth.user.access_token
+    const { data: categories, isPending, error } = useFetch(categoriesApi.getAll, accessToken);
 
 
     return (

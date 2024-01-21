@@ -2,13 +2,16 @@ import { useNavigate } from 'react-router-dom';
 import { tasksApi } from '../../api/TasksApi';
 import { Link } from 'react-router-dom';
 import './TaskDetails.css'
+import { useAuth } from 'react-oidc-context';
 
 const TaskDetails = (props) => {
+    const auth = useAuth()
+    const accessToken = auth.user.access_token
     const task = props.tasks.data[0];
     const navigate = useNavigate();
 
     const handleDelete = () => {
-        tasksApi.delete(task.id);
+        tasksApi.delete(task.id, accessToken);
         navigate('/tasks');
     }
 
@@ -26,6 +29,8 @@ const TaskDetails = (props) => {
                     <p>{task.status}</p>
                     <div className="task-details-header">Category:</div>
                     <p>{task.categoryName}</p>
+                    <div className="task-details-header">Created by:</div>
+                    <p>{task.createdBy}</p>
                     <button onClick={handleDelete}>delete</button>
                     <Link to={'/addTask/' + task.id}>
                         <button >edit</button>

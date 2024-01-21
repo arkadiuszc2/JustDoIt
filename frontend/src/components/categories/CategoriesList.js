@@ -12,6 +12,7 @@ const CategoriesList = (props) => {
                         <Link to={`/categories/${category.id}`}>
                         <h2>{ category.name }</h2>
                         <p>{ category.description }</p>
+                        <p>{ category.createdBy }</p>
                         </Link>
                     </div>
                 </div>

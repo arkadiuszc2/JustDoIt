@@ -11,6 +11,7 @@ const TaskList = (props) => {
                         <Link to={`/tasks/${task.id}`}>
                         <h2>{ task.title }</h2>
                         <p>{ task.categoryName} | {task.status} | {task.priority}</p>
+                        <p>{ task.createdBy }</p>
                         </Link>
                     </div>
                 </div>

@@ -4,25 +4,28 @@ import './Tasks.css'
 import useFetch from "../../custom-hooks/useFetch";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useAuth } from 'react-oidc-context'
 
 const Tasks = () => {
     //const { data: tasks, isPending, error } = useFetch(tasksApi.getAll);
     const [categoryName, setCategoryName] = useState('');
     const [sortBy, setSortBy] = useState('');
     const [tasks, setTasks] = useState([]);
+    const auth = useAuth()
+    const accessToken = auth.user.access_token
 
     useEffect(() => {
-        tasksApi.getAll()
+        tasksApi.getAll(accessToken)
             .then((res) => {
                 setTasks(res.data)
             })
             .catch(err => console.error('[Fetch Error]:', err))
-    }, [])
+    }, [accessToken])
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        tasksApi.getByCategoryNameAndSort(categoryName, sortBy)
+        tasksApi.getByCategoryNameAndSort(categoryName, sortBy, accessToken)
         .then((res) => {
             setTasks(res.data)
         }).catch(err => console.error('[Fetch Error]:', err))
