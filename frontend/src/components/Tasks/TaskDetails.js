@@ -7,12 +7,13 @@ import { useAuth } from 'react-oidc-context';
 const TaskDetails = (props) => {
     const auth = useAuth()
     const accessToken = auth.user.access_token
-    const task = props.tasks.data[0];
+    const task = props.tasks;
+    //console.log(task);
     const navigate = useNavigate();
 
     const handleDelete = () => {
         tasksApi.delete(task.id, accessToken);
-        navigate('/tasks');
+        navigate('/');
     }
 
     return (

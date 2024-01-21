@@ -2,8 +2,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { categoriesApi } from '../../api/CategoriesApi';
 import './TaskForm.css'
 import { useState, useEffect } from 'react';
-
+import { useAuth } from 'react-oidc-context';
 const CategoryForm = () => {
+
+    const auth = useAuth()
+    const accessToken = auth.user.access_token
     const [isPending, setIsPending] = useState(false);
     const navigate = useNavigate();
 
@@ -15,7 +18,7 @@ const CategoryForm = () => {
 
     useEffect(() => {
         if (categoryId !== 'new') {
-            categoriesApi.getById(categoryId)
+            categoriesApi.getById(categoryId, accessToken)
                 .then((res) => {
                     setCategory(res.data[0])
                 })
@@ -26,9 +29,9 @@ const CategoryForm = () => {
         e.preventDefault();
 
             if (category.id) {
-                await categoriesApi.update(category.id, category);
+                await categoriesApi.update(category.id, category, accessToken);
             } else {
-                await categoriesApi.create(category);
+                await categoriesApi.create(category, accessToken);
             }
 
             setIsPending(true);

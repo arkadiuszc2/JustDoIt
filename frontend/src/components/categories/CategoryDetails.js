@@ -7,7 +7,8 @@ import { useAuth } from 'react-oidc-context';
 const CategoryDetails = (props) => {
     const auth = useAuth()
     const accessToken = auth.user.access_token
-    const category = props.categories.data[0];
+    const category = props.categories;
+
     const navigate = useNavigate();
 
     const handleDelete = () => {

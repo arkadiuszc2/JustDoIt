@@ -10,7 +10,7 @@ export const Loading = (
       transform: 'translate(-50%, -50%)'
     }}
   >
-    <h1>Loading...
+    <h1>Login to see this resource!
     </h1>
   </div>
 )

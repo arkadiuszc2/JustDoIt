@@ -6,6 +6,7 @@ const Navbar = () => {
     const auth = useAuth()
 
     const handleLogIn = () => {
+        console.log("redirect");
         auth.signinRedirect()
     }
 
@@ -21,9 +22,9 @@ const Navbar = () => {
                 <Link to="/tasks">Tasks</Link>
                 <Link to="/categories">Categories</Link>
                 {!auth.isAuthenticated && (
-                    <button onClick={handleLogIn}>
+                    <Link to="/" onClick={handleLogIn}>
                         Login
-                    </button>
+                    </Link>
                 )}
                 {auth.isAuthenticated && (
                     <Link to='/' onClick={handleLogOut} >

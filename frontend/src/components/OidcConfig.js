@@ -1,6 +1,7 @@
 export const OidcConfig = {
     authority: process.env.REACT_APP_KEYCLOAK_BASE_URL + '/realms/app',
     client_id: 'frontend-web',
+    redirect_uri: 'http://localhost:3000',   
     onSigninCallback: () => {
       // You must provide an implementation of onSigninCallback to oidcConfig to remove the payload
       // from the URL upon successful login.

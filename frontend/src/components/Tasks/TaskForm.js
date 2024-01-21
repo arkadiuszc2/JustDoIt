@@ -2,10 +2,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { tasksApi } from '../../api/TasksApi';
 import './TaskForm.css'
 import { useState, useEffect } from 'react';
+import { useAuth } from 'react-oidc-context';
 
 const TaskForm = () => {
     const [isPending, setIsPending] = useState(false);
     const navigate = useNavigate();
+    const auth = useAuth()
+    const accessToken = auth.user.access_token
 
     const { taskId } = useParams();
     const [task, setTask] = useState({
@@ -18,7 +21,7 @@ const TaskForm = () => {
 
     useEffect(() => {
         if (taskId !== 'new') {
-            tasksApi.getById(taskId)
+            tasksApi.getById(taskId, accessToken)
                 .then((res) => {
                     setTask(res.data[0])
                 })
@@ -29,9 +32,9 @@ const TaskForm = () => {
         e.preventDefault();
 
             if (task.id) {
-                await tasksApi.update(task.id, task);
+                await tasksApi.update(task.id, task, accessToken);
             } else {
-                await tasksApi.create(task);
+                await tasksApi.create(task, accessToken);
             }
 
             setIsPending(true);

@@ -5,7 +5,7 @@ const taskClient = backendApi('/tasks')
 
 export const tasksApi = {
   getAll (token) {
-    console.log('Fetching category')
+    console.log('Fetching task')
     return taskClient.get('/sort-and-filter', { 
         params: {
             sortBy: 'disabled'
@@ -15,7 +15,7 @@ export const tasksApi = {
   },
 
   getById (id, token) {
-    console.log('Get category', id)
+    console.log('Get task', id)
     return taskClient.get(`/${id}`, {
       params: {
         searchBy: 'id'
@@ -25,7 +25,7 @@ export const tasksApi = {
   },
 
   getByCategoryNameAndSort (name, sortBy, token) {
-    console.log('Get category', name)
+    console.log('Get task', name)
     return taskClient.get(`/sort-and-filter`, {
       params: {
         categoryName: `${name}`,
@@ -36,21 +36,21 @@ export const tasksApi = {
   },
 
   create (task, token) {
-    console.log('Create category', task)
+    console.log('Create task', task)
     return taskClient.post('', task, {
       headers: { Authorization: bearerAuth(token) }
     })
     },
 
     update (id, task, token) {
-      console.log('Update category', id, task)
+      console.log('Update task', id, task)
       return taskClient.put(`/${id}`, task, {
         headers: { Authorization: bearerAuth(token) }
       })
     },
 
     delete (id, token) {
-      console.log('Delete category', id)
+      console.log('Delete task', id)
       return taskClient.delete(`/${id}`, {
         headers: { Authorization: bearerAuth(token) }
       })

@@ -12,7 +12,7 @@ export const categoriesApi = {
   },
 
   getById (id, token) {
-    console.log('Get task', id)
+    console.log('Get category', id)
     return categoriesClient.get(`/${id}`, {
       params: {
         searchBy: 'id'
@@ -22,21 +22,21 @@ export const categoriesApi = {
   },
 
   create (category, token) {
-    console.log('Create note', category)
+    console.log('Create category', category)
     return categoriesClient.post('', category, {
       headers: { Authorization: bearerAuth(token) }
     })
     },
 
     update (id, category, token) {
-      console.log('Update note', id, category)
+      console.log('Update category', id, category)
       return categoriesClient.put(`/${id}`, category, {
         headers: { Authorization: bearerAuth(token) }
       })
     },
 
     delete (id, token) {
-      console.log('Delete note', id)
+      console.log('Delete category', id)
       return categoriesClient.delete(`/${id}`, {
         headers: { Authorization: bearerAuth(token) }
       })

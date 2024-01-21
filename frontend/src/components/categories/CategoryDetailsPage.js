@@ -11,14 +11,14 @@ const CategoryDetailsPage = () => {
     const accessToken = auth.user.access_token
 
     const { id } = useParams();
-    const { category, setCategory } = useState([]);
+    const [ category, setCategory ] = useState([]);
 
     useEffect(() => {
         categoriesApi.getById(id, accessToken)
             .then((res) => {
                 setCategory(res.data[0])
             })
-    })
+    },[ id, accessToken])
 
     return (
         <div className="TaskDetailsPage">
