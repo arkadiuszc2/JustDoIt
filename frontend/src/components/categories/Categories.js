@@ -4,6 +4,7 @@ import useFetch from "../../custom-hooks/useFetch";
 import { Link } from "react-router-dom";
 import { categoriesApi } from "../../api/CategoriesApi";
 import { useAuth } from 'react-oidc-context'
+import { useEffect } from "react";
 
 const Categories = () => {
     const auth = useAuth()

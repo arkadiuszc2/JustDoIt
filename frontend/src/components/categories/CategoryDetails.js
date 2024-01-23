@@ -13,7 +13,7 @@ const CategoryDetails = (props) => {
 
     const handleDelete = () => {
         categoriesApi.delete(category.id, accessToken);
-        navigate('/categories');
+        navigate('/');
     }
 
     return (
